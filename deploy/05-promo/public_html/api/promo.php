@@ -87,7 +87,7 @@ function mm_promo_on_paid($payment, $courseTitleShort) {
         $line .= "\n🤝 معرف: " . ($p['referrer_name'] ?: '-') . ' ' . $p['referrer_phone'] . "\n💸 پورسانت: " . mm_promo_money($comm) . ' تومان';
         $tpl = mm_setting('referral_sms_template');
         if ($tpl !== '' && ctype_digit($tpl) && !empty($p['referrer_phone']) && $comm > 0) {
-            $ok = mm_sms_template($p['referrer_phone'], $tpl, ['NAME' => $p['referrer_name'] ?: 'همکار', 'COURSE' => $courseTitleShort, 'AMOUNT' => mm_promo_money($comm)]);
+            $ok = mm_sms_template($p['referrer_phone'], $tpl, ['NAME' => $p['referrer_name'] ?: 'همکار', 'AMOUNT' => mm_promo_money($comm)]);
             if ($ok) sb_request('promo_redemptions?id=eq.' . rawurlencode($rid), 'PATCH', ['sms_sent' => true]);
         }
     }

@@ -124,7 +124,7 @@ async function smsSettings(b){
   A.mount(b, html`<div class="card"><h3>پیامک به معرف<span class="sp"></span><button class="btn primary" id="sSave">${A.icon('check')} ذخیره</button></h3>
     <p class="hint">پیامک‌ها با «الگوی» (Template) تأییدشده‌ی SMS.ir ارسال می‌شوند، مثل پیامک خرید موفق. در پنل SMS.ir دو الگو بساز و شناسه‌ی عددی‌شان را اینجا بنویس. تا شناسه ثبت نشود، پیامکی فرستاده نمی‌شود (پورسانت همچنان ثبت می‌شود).</p>
     <div class="fld"><label class="lb">شناسه‌ی الگوی «خرید جدید با کد معرف» (خودکار، با هر فروش)</label><input class="in ltr" id="sT1" value="${m.referral_sms_template||''}" inputmode="numeric" placeholder="مثلاً 123456">
-      <div class="help">متن پیشنهادی الگو (متغیرها دقیقاً همین نام‌ها باشند):<br><span class="mono">سلام #NAME# عزیز، خرید جدیدی با کد شما ثبت شد. دوره: #COURSE# — پورسانت شما: #AMOUNT# تومان</span></div></div>
+      <div class="help">متن پیشنهادی الگو (متغیرها دقیقاً همین نام‌ها باشند؛ نام دوره عمداً در پیامک نیست):<br><span class="mono">سلام #NAME# عزیز، خرید جدیدی با کد معرف شما ثبت شد. پورسانت شما: #AMOUNT# تومان</span></div></div>
     <div class="fld"><label class="lb">شناسه‌ی الگوی «گزارش» (دستی، با دکمه‌ی پیامک گزارش)</label><input class="in ltr" id="sT2" value="${m.referral_report_sms_template||''}" inputmode="numeric" placeholder="مثلاً 123457">
       <div class="help"><span class="mono">سلام #NAME# عزیز، گزارش شما: #COUNT# فروش — پورسانت پرداخت‌نشده: #PENDING# تومان — پرداخت‌شده: #PAID# تومان</span></div></div></div>`);
   $('#sSave').onclick = ev=>A.busy(ev.currentTarget, async ()=>{
