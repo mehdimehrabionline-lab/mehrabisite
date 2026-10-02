@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-FKY77DD6ZV"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag("js",new Date());gtag("config","G-FKY77DD6ZV");</script>
+
+<meta charset="UTF-8"/>
+<link rel="preload" href="/assets/fonts/vazirmatn-arabic-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/fonts/fonts.css?v=20261003a">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>بلاگ | آکادمی هوش مصنوعی و تولید محتوای مهدی محرابی</title>
+<meta name="description" content="مقالات، آموزش‌ها و ویدیوهای آکادمی هوش مصنوعی مهدی محرابی — تولید محتوا، هوش مصنوعی، ویدیوگرافی و آموزش در شیراز."/>
+<link rel="canonical" href="https://mehdimehrabi.ir/blog.html"/>
+<script src="/assets/supabase.min.js"></script><script>window.supabase||document.write('<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"><\/script>')</script>
+<script src="supabase-config.js"></script>
+<style>
+:root{
+  --bg:#0c0b09;--bg-2:#15130f;--ink:#f4f1ea;--ink-2:#d8d3c8;
+  --muted:#8f897e;--line:rgba(244,241,234,.12);--line-2:rgba(244,241,234,.20);
+  --accent:#c98a5a;--accent-2:#a85a32;
+  --serif:'Fraunces','Vazirmatn',serif;--sans:'Vazirmatn',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
+::selection{background:var(--accent);color:#0a0a0a}
+
+/* Nav */
+.nav{position:sticky;top:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:18px 40px;background:rgba(12,11,9,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.nav .brand{font-family:var(--serif);font-style:italic;font-size:20px;color:var(--ink);text-decoration:none}
+.nav .brand b{font-style:normal;font-weight:500}
+.nav ul{display:flex;gap:22px;list-style:none;align-items:center}
+.nav a{color:var(--muted);text-decoration:none;font-size:13px;transition:color .2s}
+.nav a:hover,.nav a.active{color:var(--ink)}
+.lang-toggle{background:transparent;border:1px solid var(--line-2);color:var(--ink);padding:5px 12px;border-radius:20px;font-family:var(--sans);font-size:12px;cursor:pointer;transition:all .25s}
+.menu-btn{display:none;background:none;border:none;color:var(--ink);font-size:22px;cursor:pointer}
+
+/* Hero */
+.blog-hero{padding:80px 40px 50px;max-width:1200px;margin:0 auto}
+.blog-hero .eyebrow{font-size:11px;letter-spacing:5px;color:var(--accent);margin-bottom:16px;display:flex;align-items:center;gap:12px}
+.blog-hero .eyebrow::before{content:"";width:28px;height:1px;background:var(--accent)}
+.blog-hero h1{font-family:var(--serif);font-weight:300;font-size:clamp(36px,5vw,64px);line-height:1;letter-spacing:-.02em;margin-bottom:18px}
+.blog-hero h1 em{font-style:italic;color:var(--accent)}
+.blog-hero p{color:var(--muted);font-size:16px;max-width:520px}
+
+/* Filters */
+.blog-filters{padding:0 40px 40px;max-width:1200px;margin:0 auto;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.filter-btn{background:transparent;border:1px solid var(--line);color:var(--muted);padding:8px 18px;border-radius:20px;font-family:var(--sans);font-size:12px;cursor:pointer;transition:all .25s}
+.filter-btn:hover{border-color:var(--line-2);color:var(--ink)}
+.filter-btn.active{background:var(--accent);color:#0a0a0a;border-color:var(--accent)}
+.blog-search{margin-right:auto;background:var(--bg-2);border:1px solid var(--line);color:var(--ink);padding:8px 16px;border-radius:20px;font-family:var(--sans);font-size:13px;outline:none;width:220px}
+.blog-search:focus{border-color:var(--accent)}
+.blog-search::placeholder{color:var(--muted)}
+
+/* Grid */
+.blog-grid{padding:0 40px 80px;max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
+.post-card{background:var(--bg-2);border:1px solid var(--line);border-radius:6px;overflow:hidden;cursor:pointer;transition:transform .5s cubic-bezier(.2,.7,.2,1),border-color .3s;text-decoration:none;display:block;color:var(--ink)}
+.post-card:hover{transform:translateY(-6px);border-color:var(--line-2)}
+.post-card .cover{width:100%;aspect-ratio:16/9;object-fit:cover;background:linear-gradient(135deg,#1a1410,#a85a32);display:block}
+.post-card .cover-ph{width:100%;aspect-ratio:16/9;background:linear-gradient(135deg,#1a1410,#3a2a1c);display:flex;align-items:center;justify-content:center}
+.post-card .cover-ph .icon{font-size:32px;opacity:.3}
+.post-card .body{padding:22px}
+.post-card .meta{display:flex;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap}
+.post-card .cat{font-size:10px;letter-spacing:2px;color:var(--accent);border:1px solid var(--line-2);padding:3px 10px;border-radius:20px}
+.post-card .date{font-size:11px;color:var(--muted)}
+.post-card .read-time{font-size:11px;color:var(--muted);margin-right:auto}
+.post-card .featured-badge{font-size:9px;letter-spacing:1px;background:var(--accent);color:#0a0a0a;padding:2px 8px;border-radius:20px;font-weight:600}
+.post-card h2{font-family:var(--serif);font-weight:400;font-size:20px;line-height:1.4;margin-bottom:10px;letter-spacing:-.01em}
+.post-card p{font-size:13px;color:var(--muted);line-height:1.8;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.post-card .foot{margin-top:16px;display:flex;align-items:center;justify-content:space-between;padding-top:14px;border-top:1px solid var(--line)}
+.post-card .views{font-size:11px;color:var(--muted)}
+.post-card .arrow{font-family:var(--serif);font-size:18px;color:var(--accent)}
+.has-video::after{content:"▶";position:absolute;top:12px;left:12px;background:rgba(0,0,0,.7);color:#fff;padding:4px 10px;border-radius:20px;font-size:11px}
+.post-card .cover-wrap{position:relative}
+
+/* Empty/Loading */
+.blog-empty{grid-column:1/-1;text-align:center;padding:80px 20px;color:var(--muted);font-family:var(--serif);font-style:italic;font-size:18px}
+.blog-loading{grid-column:1/-1;display:flex;justify-content:center;padding:60px}
+.spinner{width:32px;height:32px;border:2px solid var(--line);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Load more */
+.load-more-wrap{text-align:center;padding:0 40px 80px;max-width:1200px;margin:0 auto}
+.btn-load-more{background:transparent;border:1px solid var(--line-2);color:var(--ink);padding:14px 40px;font-family:var(--sans);font-size:13px;letter-spacing:2px;cursor:pointer;border-radius:2px;transition:all .3s}
+.btn-load-more:hover{background:var(--accent);border-color:var(--accent);color:#0a0a0a}
+
+/* Footer */
+footer{background:#080807;border-top:1px solid var(--line);padding:32px 40px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
+footer .copy{font-size:12px;color:var(--muted);letter-spacing:1px}
+footer .links{display:flex;gap:16px}
+footer .links a{font-size:12px;color:var(--muted);text-decoration:none;transition:color .2s}
+footer .links a:hover{color:var(--accent)}
+
+/* Responsive */
+@media (max-width:960px){
+  .nav{padding:16px 22px}
+  .nav ul{gap:14px}
+  .blog-hero{padding:60px 22px 36px}
+  .blog-filters{padding:0 22px 28px}
+  .blog-search{width:160px}
+  .blog-grid{padding:0 22px 60px;grid-template-columns:repeat(2,1fr);gap:18px}
+  footer{padding:24px 22px}
+}
+@media (max-width:580px){
+  .nav ul li:not(:last-child):not(:first-child){display:none}
+  .menu-btn{display:block}
+  .blog-grid{grid-template-columns:1fr}
+  .blog-search{width:130px}
+}
+</style>
+<link rel="icon" href="assets/favicon.ico" sizes="any"/>
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png"/>
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16.png"/>
+<link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png"/>
+<link rel="stylesheet" href="/assets/site.css?v=20261003a">
+<script src="/assets/site.js?v=20261003a" defer></script>
+</head>
+<body>
+
+<header class="nav" id="nav">
+  <a href="index.html" class="brand">Mehdi <b>Mehrabi</b></a>
+  <button class="menu-btn" id="menuBtn">≡</button>
+  <ul id="navMenu">
+    <li><a href="index.html#home" data-i18n="nav_home">خانه</a></li>
+    <li><a href="index.html#about" data-i18n="nav_about">درباره</a></li>
+    <li><a href="index.html#work" data-i18n="nav_work">نمونه‌کار</a></li>
+    <li><a href="index.html#courses" data-i18n="nav_courses">دوره‌ها</a></li>
+    <li><a href="blog.html" class="active" data-i18n="nav_blog">بلاگ</a></li>
+    <li><a href="index.html#contact" data-i18n="nav_contact">تماس</a></li>
+    <li><button id="langToggle" class="lang-toggle">EN</button></li>
+  </ul>
+</header>
+
+<div class="blog-hero">
+  <div class="eyebrow" data-i18n="blog_eyebrow">بلاگ — مقالات و آموزش‌ها</div>
+  <h1 data-i18n="blog_title">دانش رو <em>اشتراک</em> بذاریم.</h1>
+  <p data-i18n="blog_lead">مقالات، آموزش‌ها و ویدیوهای آکادمی هوش مصنوعی مهدی محرابی — تولید محتوا، هوش مصنوعی، ویدیوگرافی.</p>
+</div>
+
+<div class="blog-filters">
+  <button class="filter-btn active" data-cat="">همه</button>
+  <button class="filter-btn" data-cat="هوش مصنوعی">هوش مصنوعی</button>
+  <button class="filter-btn" data-cat="تولید محتوا">تولید محتوا</button>
+  <button class="filter-btn" data-cat="ویدیوگرافی">ویدیوگرافی</button>
+  <button class="filter-btn" data-cat="آموزش">آموزش</button>
+  <input type="text" class="blog-search" id="blogSearch" placeholder="جستجو…" data-i18n-ph="blog_search"/>
+</div>
+
+<div class="blog-grid" id="blogGrid">
+  <div class="blog-loading"><div class="spinner"></div></div>
+</div>
+
+<div class="load-more-wrap" id="loadMoreWrap" style="display:none">
+  <button class="btn-load-more" id="loadMoreBtn" data-i18n="blog_load_more">بارگذاری بیشتر</button>
+</div>
+
+<div style="text-align:center;padding:20px 0"><a referrerpolicy="origin" target="_blank" href="https://trustseal.enamad.ir/?id=7437957&Code=jLmdD0lCLV7eeJKo1o59E3HJZKipaqOj"><img referrerpolicy="origin" src="https://trustseal.enamad.ir/logo.aspx?id=7437957&Code=jLmdD0lCLV7eeJKo1o59E3HJZKipaqOj" alt="نماد اعتماد" style="cursor:pointer;max-width:100px;background:#fff;border-radius:6px;padding:6px" code="jLmdD0lCLV7eeJKo1o59E3HJZKipaqOj"></a></div><footer>
+  <div class="copy">© ۱۴۰۴ آکادمی هوش مصنوعی مهدی محرابی</div>
+  <div class="links">
+    <a href="https://instagram.com/Filmehdy" target="_blank">Instagram</a>
+    <a href="https://wa.me/989170073010" target="_blank">WhatsApp</a>
+    <a href="https://t.me/+989170073010" target="_blank">Telegram</a>
+  </div>
+</footer>
+
+<script>
+const I18N_BLOG = {
+  fa:{nav_home:'خانه',nav_about:'درباره',nav_work:'نمونه‌کار',nav_courses:'دوره‌ها',nav_blog:'بلاگ',nav_contact:'تماس',blog_eyebrow:'بلاگ — مقالات و آموزش‌ها',blog_title:'دانش رو <em>اشتراک</em> بذاریم.',blog_lead:'مقالات، آموزش‌ها و ویدیوهای آکادمی هوش مصنوعی مهدی محرابی.',blog_search:'جستجو…',blog_load_more:'بارگذاری بیشتر',lang_btn:'EN'},
+  en:{nav_home:'Home',nav_about:'About',nav_work:'Work',nav_courses:'Courses',nav_blog:'Blog',nav_contact:'Contact',blog_eyebrow:'Blog — Articles & Tutorials',blog_title:'Let\'s <em>share</em> knowledge.',blog_lead:'Articles, tutorials and videos from Mehdi Mehrabi AI Academy.',blog_search:'Search…',blog_load_more:'Load more',lang_btn:'فا'}
+};
+let currentLang = localStorage.getItem('mm_lang')||'fa';
+function applyLang(lang){
+  currentLang=lang; localStorage.setItem('mm_lang',lang);
+  const d=I18N_BLOG[lang];
+  document.documentElement.lang=lang; document.documentElement.dir=lang==='fa'?'rtl':'ltr';
+  document.querySelectorAll('[data-i18n]').forEach(el=>{const k=el.getAttribute('data-i18n');if(d[k])el.innerHTML=d[k];});
+  document.querySelectorAll('[data-i18n-ph]').forEach(el=>{const k=el.getAttribute('data-i18n-ph');if(d[k])el.placeholder=d[k];});
+  const lt=document.getElementById('langToggle'); if(lt) lt.textContent=d.lang_btn;
+  filterAndRender();
+}
+document.getElementById('langToggle').addEventListener('click',()=>applyLang(currentLang==='fa'?'en':'fa'));
+
+// Posts
+let allPosts=[], filteredPosts=[], currentCat='', page=0, PAGE_SIZE=9;
+
+async function loadPosts(){
+  const {data,error}=await sb.from('posts').select('id,title,title_en,slug,excerpt,excerpt_en,cover_url,video_url,category,category_en,is_featured,views,read_time,created_at').eq('is_published',true).order('created_at',{ascending:false});
+  if(error){ document.getElementById('blogGrid').innerHTML='<div class="blog-empty">خطا در بارگذاری.</div>'; return; }
+  allPosts=data||[];
+  filterAndRender();
+}
+
+function filterAndRender(){
+  const EN=currentLang==='en';
+  const q=(document.getElementById('blogSearch').value||'').toLowerCase();
+  filteredPosts=allPosts.filter(p=>{
+    const t=(EN&&p.title_en?p.title_en:p.title)||'';
+    const e=(EN&&p.excerpt_en?p.excerpt_en:p.excerpt)||'';
+    const catOk=!currentCat||(p.category||'')==currentCat;
+    const qOk=!q||t.toLowerCase().includes(q)||e.toLowerCase().includes(q);
+    return catOk&&qOk;
+  });
+  page=0;
+  renderPosts(false);
+}
+
+function fa_date(iso){
+  try{ return new Date(iso).toLocaleDateString('fa-IR',{year:'numeric',month:'long',day:'numeric'}); }
+  catch(e){ return iso; }
+}
+
+function renderPosts(append){
+  const EN=currentLang==='en';
+  const grid=document.getElementById('blogGrid');
+  const slice=filteredPosts.slice(page*PAGE_SIZE,(page+1)*PAGE_SIZE);
+  if(!append) grid.innerHTML='';
+  if(!append && filteredPosts.length===0){
+    grid.innerHTML='<div class="blog-empty">'+(EN?'No posts yet.':'هنوز مقاله‌ای منتشر نشده.')+'</div>';
+    document.getElementById('loadMoreWrap').style.display='none'; return;
+  }
+  grid.innerHTML+= slice.map(p=>{
+    const title=EN&&p.title_en?p.title_en:p.title;
+    const excerpt=EN&&p.excerpt_en?p.excerpt_en:p.excerpt;
+    const cat=EN&&p.category_en?p.category_en:p.category;
+    const cover=p.cover_url?`<img class="cover" src="${p.cover_url}" alt="${title||''}"/>`:`<div class="cover-ph"><span class="icon">${p.video_url?'▶':'📝'}</span></div>`;
+    const readTime=(EN?`${p.read_time||5} min read`:`${p.read_time||5} دقیقه`);
+    return `<a class="post-card" href="blog-post.html?slug=${p.slug}">
+      <div class="cover-wrap${p.video_url?' has-video':''}">${cover}</div>
+      <div class="body">
+        <div class="meta">
+          ${p.is_featured?`<span class="featured-badge">${EN?'Featured':'ویژه'}</span>`:''}
+          ${cat?`<span class="cat">${cat}</span>`:''}
+          <span class="date">${fa_date(p.created_at)}</span>
+          <span class="read-time">⏱ ${readTime}</span>
+        </div>
+        <h2>${title||''}</h2>
+        <p>${excerpt||''}</p>
+        <div class="foot">
+          <span class="views">👁 ${(p.views||0).toLocaleString('fa-IR')}</span>
+          <span class="arrow">←</span>
+        </div>
+      </div>
+    </a>`;
+  }).join('');
+  const hasMore=(page+1)*PAGE_SIZE<filteredPosts.length;
+  document.getElementById('loadMoreWrap').style.display=hasMore?'block':'none';
+}
+
+document.getElementById('loadMoreBtn').addEventListener('click',()=>{ page++; renderPosts(true); });
+
+// Filters
+document.querySelectorAll('.filter-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    currentCat=btn.dataset.cat;
+    filterAndRender();
+  });
+});
+
+let searchTimer;
+document.getElementById('blogSearch').addEventListener('input',()=>{
+  clearTimeout(searchTimer);
+  searchTimer=setTimeout(filterAndRender,300);
+});
+
+// Init
+applyLang(currentLang);
+loadPosts();
+</script>
+</body>
+</html>

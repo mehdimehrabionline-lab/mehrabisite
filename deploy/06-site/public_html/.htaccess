@@ -1,0 +1,72 @@
+DirectoryIndex index.php index.html
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # ── آیکون‌های ریشه (رفع خطای 404 گوگل) ──
+  RewriteRule ^favicon\.ico$ /assets/favicon.ico [L]
+  RewriteRule ^apple-touch-icon\.png$ /assets/apple-touch-icon.png [L]
+  RewriteRule ^apple-touch-icon-precomposed\.png$ /assets/apple-touch-icon.png [L]
+
+  # ── نقشه سایت پویا ──
+  RewriteRule ^sitemap\.xml$ /sitemap.php [L]
+
+  # ── ریدایرکت دائمی از آدرس‌های قدیمی به جدید ──
+  # course.html?id=xxx  →  /دوره/xxx
+  RewriteCond %{THE_REQUEST} \s/course\.html\?id=([^&\s]+) [NC]
+  RewriteRule ^course\.html$ /c/%1? [R=301,L]
+
+  # blog-post.html?slug=xxx  →  /مقاله/xxx
+  RewriteCond %{THE_REQUEST} \s/blog-post\.html\?slug=([^&\s]+) [NC]
+  RewriteRule ^blog-post\.html$ /p/%1? [R=301,L]
+
+  # ── آدرس‌های تمیز (داخلی — کاربر اینها را می‌بیند) ──
+  # /c/hoosh-masnoee  →  course.html?slug=hoosh-masnoee
+  RewriteRule ^c/([A-Za-z0-9_-]+)/?$ course-page.php?slug=$1 [L,QSA]
+
+  # /p/amuzesh-shiraz  →  blog-post.html?slug=amuzesh-shiraz
+  RewriteRule ^p/([a-zA-Z0-9_-]+)/?$ /post-page.php?slug=$1 [L,QSA]
+
+  # /blog  →  blog.html
+  RewriteRule ^blog/?$ /blog.html [L]
+</IfModule>
+
+# ویدیو: بدون فشرده‌سازی (سرعت بیشتر)
+<IfModule mod_deflate.c>
+  SetEnvIfNoCase Request_URI \.(?:mp4|m4v|webm|mov)$ no-gzip dont-vary
+</IfModule>
+
+# پشتیبانی از Range Request (لازم برای seek کردن ویدیو)
+<IfModule mod_headers.c>
+  Header set Accept-Ranges bytes
+</IfModule>
+
+# فشرده‌سازی متن‌ها
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript
+  AddOutputFilterByType DEFLATE application/javascript application/x-javascript application/json
+  AddOutputFilterByType DEFLATE image/svg+xml
+</IfModule>
+
+# فونت‌های woff2 روی خود هاست
+AddType font/woff2 .woff2
+
+# کش مرورگر برای فایل‌های ثابت
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType image/jpeg "access plus 1 year"
+  ExpiresByType image/png "access plus 1 year"
+  ExpiresByType image/webp "access plus 1 year"
+  ExpiresByType image/x-icon "access plus 1 year"
+  ExpiresByType text/css "access plus 1 month"
+  ExpiresByType application/javascript "access plus 1 month"
+  ExpiresByType font/woff2 "access plus 1 year"
+</IfModule>
+
+# امنیت
+<FilesMatch "\.(sql|md|log|ini)$">
+  Order allow,deny
+  Deny from all
+</FilesMatch>
+
+Options -Indexes
