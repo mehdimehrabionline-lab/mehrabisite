@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta name="robots" content="noindex,nofollow">
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<meta name="robots" content="noindex,nofollow"/>
+<title>پخش دوره | آکادمی مهدی محرابی</title>
+<link rel="icon" href="assets/favicon.ico" sizes="any"/>
+<link rel="icon" type="image/png" href="assets/favicon-32.png"/>
+<link rel="preconnect" href="https://upload.mehdimehrabi.ir">
+<link rel="preload" href="/assets/fonts/vazirmatn-arabic-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/fonts/fonts.css">
+<style>
+:root{--bg:#0c0b09;--bg-2:#15130f;--bg-3:#1d1a15;--ink:#f4f1ea;--ink-2:#d8d3c8;--muted:#8f897e;--line:rgba(244,241,234,.12);--accent:#c98a5a;--accent-2:#a85a32;--serif:'Fraunces','Vazirmatn',serif;--sans:'Vazirmatn',system-ui,sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--sans);background:var(--bg);color:var(--ink);min-height:100vh;
+  -webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+button{font-family:var(--sans)}
+
+/* ── نوار بالا ── */
+.nav{display:flex;justify-content:space-between;align-items:center;padding:12px 24px;border-bottom:1px solid var(--line);background:#0c0b09}
+.nav .brand{font-family:var(--serif);font-style:italic;font-size:18px;color:var(--ink);text-decoration:none}
+.nav .brand b{font-style:normal}
+.nav a.back{color:var(--ink-2);text-decoration:none;font-size:13px;padding:8px 12px;border:1px solid var(--line);border-radius:20px}
+
+/* ── چیدمان دسکتاپ ── */
+.layout{display:grid;grid-template-columns:1fr 360px;align-items:start;max-width:1500px;margin:0 auto}
+.player-side{padding:22px 26px;position:sticky;top:0}
+.playlist{background:var(--bg-2);border-right:1px solid var(--line);padding:18px;min-height:calc(100vh - 57px)}
+
+/* ── پلیر ── */
+.video-wrap{position:relative;width:100%;aspect-ratio:16/9;background:#000;border-radius:12px;overflow:hidden}
+.video-wrap:fullscreen,.video-wrap:-webkit-full-screen{width:100vw;height:100vh;border-radius:0}
+.video-wrap:fullscreen #vid,.video-wrap:-webkit-full-screen #vid{object-fit:contain}
+#vid{width:100%;height:100%;display:block;background:#000}
+#vid::-webkit-media-controls-download-button{display:none!important}
+.start-overlay{position:absolute;inset:0;z-index:70;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;
+  background:radial-gradient(circle at center,rgba(20,18,14,.55),rgba(0,0,0,.9));cursor:pointer;text-align:center;padding:20px}
+.start-overlay .play{width:74px;height:74px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;box-shadow:0 8px 30px rgba(201,138,90,.45);transition:transform .2s}
+.start-overlay:hover .play{transform:scale(1.06)}
+.start-overlay .play svg{margin-right:-4px}
+.start-overlay .t{font-size:15px;font-weight:600}
+.start-overlay .s{font-size:12px;color:var(--ink-2);opacity:.85}
+.buffering{display:none;position:absolute;inset:0;flex-direction:column;gap:14px;align-items:center;justify-content:center;background:rgba(0,0,0,.35);z-index:60;pointer-events:none}
+.buffering .bt{font-size:12px;color:#fff;text-align:center;padding:0 28px;line-height:1.9;text-shadow:0 1px 6px rgba(0,0,0,.9);min-height:22px}
+.buffering .sp{width:42px;height:42px;border:3px solid rgba(255,255,255,.2);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.wm{position:absolute;color:rgba(255,255,255,.32);font-size:13px;font-family:monospace;pointer-events:none;z-index:50;text-shadow:0 1px 4px rgba(0,0,0,.95);letter-spacing:1px;white-space:nowrap}
+/* دکمه‌ی تمام‌صفحه‌ی خودمون — چون دکمه‌ی تمام‌صفحه‌ی خودِ مرورگر رو مخفی کردیم (controlsList=nofullscreen)
+   تا به‌جاش کل جعبه (شامل واترمارک) رو تمام‌صفحه کنیم، نه فقط ویدیو. */
+.fs-btn{position:absolute;top:10px;right:10px;z-index:65;height:32px;border:none;border-radius:6px;background:rgba(0,0,0,.55);display:flex;align-items:center;gap:6px;justify-content:center;cursor:pointer;padding:0 10px;font-family:var(--sans);font-size:12px;color:#fff;white-space:nowrap}
+.fs-btn:hover{background:rgba(0,0,0,.8)}
+/* کلیک روی خودِ تصویر ویدیو هم پلی/پاز کنه — ولی نوار کنترل پایین (که بومی مرورگره) رو نپوشونه،
+   وگرنه کلیک روی دکمه‌های خودِ مرورگر (پلی، صدا، منو) کار نمی‌کنه. */
+.click-toggle{position:absolute;top:0;left:0;right:0;bottom:44px;z-index:55;cursor:pointer}
+
+/* ── نوار زیر پلیر: عنوان + سرعت ── */
+.now-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 2px 6px;flex-wrap:wrap}
+.now-title{font-family:var(--serif);font-weight:400;font-size:20px;line-height:1.5}
+.now-meta{font-size:12px;color:var(--muted);margin-top:2px}
+.speed{display:flex;gap:6px;align-items:center}
+.speed .lbl{font-size:11px;color:var(--muted);margin-left:2px}
+.speed button{background:var(--bg-3);border:1px solid var(--line);color:var(--ink-2);padding:6px 10px;border-radius:6px;font-size:12px;cursor:pointer;min-width:44px}
+.quality-sel{background:var(--bg-3);border:1px solid var(--line);color:var(--ink-2);padding:6px 8px;border-radius:6px;font-size:12px;font-family:var(--sans);margin-left:6px}
+.speed button.active{background:var(--accent);color:#0a0a0a;border-color:var(--accent);font-weight:700}
+.now-desc{font-size:14px;color:var(--ink-2);line-height:1.9;margin-top:8px}
+.desc-text{-webkit-user-select:text;user-select:text;-webkit-touch-callout:default;white-space:normal;word-break:break-word}
+.desc-text a{color:var(--accent);text-decoration:underline;text-underline-offset:3px;word-break:break-all}
+.ep-desc{display:none;font-size:13px;color:var(--ink-2);line-height:1.9;padding:0 12px 12px}
+.notice{font-size:11px;color:var(--muted);margin-top:14px;line-height:1.8}
+
+/* ── لیست جلسات ── */
+.pl-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:12px}
+.pl-head h3{font-family:var(--serif);font-weight:400;font-size:17px}
+.pl-head span{font-size:12px;color:var(--muted)}
+.ep{border:1px solid transparent;border-radius:10px;margin-bottom:6px;transition:background .2s}
+.ep-row{display:flex;gap:12px;padding:12px;align-items:center;cursor:pointer;width:100%;background:none;border:none;color:inherit;text-align:right}
+.ep:hover{background:var(--bg-3)}
+.ep.active{background:rgba(201,138,90,.12);border-color:rgba(201,138,90,.35)}
+.ep-num{width:28px;height:28px;border-radius:50%;background:var(--bg-3);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;color:var(--muted)}
+.ep.active .ep-num{background:var(--accent);color:#0a0a0a}
+.ep.done .ep-num{background:rgba(126,199,126,.18);color:#7ec77e}
+.ep-info{flex:1;min-width:0}
+.ep-info h4{font-size:14px;font-weight:500;line-height:1.6}
+.ep-info span{font-size:11px;color:var(--muted)}
+.ep-play{font-size:12px;color:var(--accent);flex-shrink:0}
+.ep-attach{padding:0 12px 12px;display:flex;flex-direction:column;gap:6px}
+.ep-attach-btn{display:flex;align-items:center;gap:8px;width:100%;text-align:right;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:11px 12px;color:var(--ink-2);font-size:13px;cursor:pointer}
+.ep-attach-btn:hover{border-color:var(--accent)}
+.ep-attach-btn .t{flex:1}
+.ep-attach-btn .dl{color:var(--accent)}
+
+.loading,.error{text-align:center;padding:60px 20px;color:var(--muted)}
+.error .ic{font-size:44px;margin-bottom:14px}
+.error a{color:var(--accent);text-decoration:none}
+
+/* ── موبایل: پلیر بالای صفحه ثابت می‌مونه، لیست جلسات بلافاصله زیرش ── */
+@media(max-width:900px){
+  .nav{padding:10px 14px}
+  .layout{display:block}
+  .player-side{padding:0;position:sticky;top:0;z-index:80;background:var(--bg)}
+  .video-wrap{border-radius:0}
+  .now-bar{padding:10px 14px 10px;border-bottom:1px solid var(--line);background:var(--bg)}
+  .now-title{font-size:16px}
+  .now-desc,.notice{display:none}
+  .ep-desc{display:block}
+  .speed button{padding:6px 8px;min-width:40px}
+  .playlist{border-right:0;min-height:0;padding:14px 12px 40px}
+  .ep-row{padding:14px 10px}
+}
+</style>
+</head>
+<body oncontextmenu="return !!(event.target.closest && event.target.closest('.desc-text'))">
+<div style="position:fixed;bottom:6px;left:6px;z-index:99999;background:#c98a5a;color:#000;padding:2px 9px;border-radius:10px;font:600 11px sans-serif;opacity:.9;pointer-events:none">TEST</div>
+<header class="nav">
+  <a href="/" class="brand">Mehdi <b>Mehrabi</b></a>
+  <a href="dashboard-test.html" class="back">← دوره‌های من</a>
+</header>
+
+<div id="loading" class="loading">در حال بارگذاری…</div>
+<div id="error" class="error" style="display:none"></div>
+
+<div class="layout" id="main" style="display:none">
+  <div class="player-side">
+    <div class="video-wrap" id="videoWrap">
+      <video id="vid" controls controlsList="nodownload noremoteplayback nofullscreen" disablePictureInPicture playsinline webkit-playsinline preload="none"></video>
+      <button type="button" class="fs-btn" id="fsBtn" onclick="toggleFullscreen()" aria-label="مشاهده تمام‌صفحه" title="مشاهده تمام‌صفحه">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3m11-5v3a2 2 0 0 1-2 2h-3"/></svg>
+        <span>مشاهده تمام‌صفحه</span>
+      </button>
+      <div class="click-toggle" id="clickToggle" onclick="togglePlayPause()"></div>
+      <div class="buffering" id="buffering"><div class="sp"></div><div class="bt" id="bufText"></div></div>
+      <div class="start-overlay" id="startOverlay">
+        <div class="play"><svg width="30" height="30" viewBox="0 0 24 24" fill="#0a0a0a"><path d="M8 5v14l11-7z"/></svg></div>
+        <div class="t" id="startTitle">شروع دوره</div>
+        <div class="s" id="startSub">یک جلسه از لیست انتخاب کن یا دکمه‌ی پخش رو بزن</div>
+      </div>
+    </div>
+
+    <div class="now-bar">
+      <div>
+        <div class="now-title" id="vTitle">یک جلسه انتخاب کن</div>
+        <div class="now-meta" id="vMeta"></div>
+      </div>
+      <div class="speed">
+        <select id="qualitySel" class="quality-sel" style="display:none" onchange="setQuality(this.value)" aria-label="کیفیت"></select>
+        <span class="lbl">سرعت</span>
+        <button data-speed="1" class="active" onclick="setSpeed(1,this)">۱×</button>
+        <button data-speed="1.25" onclick="setSpeed(1.25,this)">۱.۲۵</button>
+        <button data-speed="1.5" onclick="setSpeed(1.5,this)">۱.۵</button>
+        <button data-speed="2" onclick="setSpeed(2,this)">۲×</button>
+      </div>
+    </div>
+    <p class="now-desc desc-text" id="vDesc"></p>
+    <p class="notice">🔒 این ویدیو اختصاصی شماست و شماره موبایلتان روی آن ثبت شده. لطفاً آن را به اشتراک نگذارید.</p>
+  </div>
+
+  <aside class="playlist">
+    <div class="pl-head">
+      <h3>سرفصل‌های دوره</h3>
+      <span id="epCount"></span>
+    </div>
+    <div id="epList"></div>
+  </aside>
+</div>
+
+<script>
+/* ─────────────────────────────────────────────
+   مسیر پخش ویدیو
+   اگه ساب‌دامین مستقیم (بدون Cloudflare) راه‌اندازی شده باشه، ویدیو مستقیم از سرور ایران
+   پخش می‌شه (خیلی سریع‌تر). اگه در دسترس نبود، خودکار از مسیر عادی سایت پخش می‌شه.
+   ───────────────────────────────────────────── */
+/* موانع ضبط پخش (مکمل محافظت سمت سرور): جلوی روش‌های رایج ضبط ویدیو از روی پلیر رو می‌گیره.
+   توجه: افزونه‌هایی که خارج از صفحه ضبط می‌کنن (مثل ضبط کل تب) با این کارها متوقف نمی‌شن. */
+try {
+  ['captureStream','mozCaptureStream'].forEach(k => {
+    if (HTMLMediaElement.prototype[k]) Object.defineProperty(HTMLMediaElement.prototype, k, { value: undefined, configurable: false });
+  });
+  window.MediaRecorder = undefined;
+} catch(e){}
+
+const DIRECT_STREAM_HOST = 'https://upload.mehdimehrabi.ir';
+const toFa = n => String(n).replace(/[0-9]/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]);
+
+const courseId = new URLSearchParams(location.search).get('course');
+let videos = [], current = -1, watermark = '', userPhone = '', tokenIssuedAt = 0, tokenTtl = 28800;
+let currentSpeed = 1;
+const vid = document.getElementById('vid');
+const overlay = document.getElementById('startOverlay');
+const bufEl = document.getElementById('buffering');
+
+/* روی آیفون/آیپد/سافاری، دکمه‌ی فول‌اسکرین خودمون و لایه‌ی کلیک-برای-پلی/پاز رو کاملاً غیرفعال می‌کنیم.
+   دلیل: اونجا ویدیو با پلیر بومی خودِ اپل (نه این API استاندارد) فول‌اسکرین می‌شه، پس دکمه‌ی ما
+   هیچ فایده‌ای نداره و فقط روی دکمه‌ی فول‌اسکرین بومی اپل می‌افته و باعث می‌شه اصلاً فول‌اسکرین
+   نشه (و به‌جاش پخش/توقف بشه). روی آیفون همون رفتار قبلی (قبل از این تغییرات) باقی می‌مونه. */
+(function hideCustomFsControlsOnApple(){
+  const isApple = /iP(hone|ad|od)/.test(navigator.userAgent) ||
+    (navigator.userAgent.includes('Safari') && !/Chrome|Chromium|Android|CriOS|FxiOS|Edg/.test(navigator.userAgent));
+  if (!isApple) return;
+  const fsBtn = document.getElementById('fsBtn');
+  const clickToggle = document.getElementById('clickToggle');
+  if (fsBtn) fsBtn.style.display = 'none';
+  if (clickToggle) clickToggle.style.display = 'none';
+})();
+
+/* مسیر مستقیم فقط وقتی استفاده می‌شه که از قبل ثابت شده باشه سالمه.
+   تست: یه آیکون کوچیک که فقط داخل public_html هست، از مسیر مستقیم لود می‌شه.
+   لود شد → مسیر مستقیم؛ لود نشد یا بیش از ۲.۵ ثانیه طول کشید → مسیر عادی. هیچ کلیکی منتظر این تست نمی‌مونه. */
+let directOk = false;
+(function probeDirect(){
+  if (!DIRECT_STREAM_HOST || sessionStorage.getItem('mm_direct_stream_bad')) return;
+  const img = new Image();
+  let done = false;
+  const finish = ok => { if (done) return; done = true; directOk = ok; if (!ok) sessionStorage.setItem('mm_direct_stream_bad','1'); };
+  img.onload = () => finish(img.naturalWidth > 0);
+  img.onerror = () => finish(false);
+  setTimeout(() => finish(false), 2500);
+  img.src = DIRECT_STREAM_HOST + '/assets/favicon-32.png?probe=' + Date.now();
+})();
+
+function streamBase(){
+  return (directOk && !sessionStorage.getItem('mm_direct_stream_bad')) ? DIRECT_STREAM_HOST : '';
+}
+
+let userSession = '';
+// نشست منقضی/باطل شده (مثلاً با دستگاه سوم وارد شدن) ← پاک کن و به ورود بفرست
+function sessionExpired(){
+  localStorage.removeItem('mm_session');
+  localStorage.removeItem('mm_user');
+  showErr('نشست شما منقضی شده یا از دستگاه دیگری وارد شده‌اید. لطفاً دوباره وارد شوید.', 'register-test.html', 'ورود');
+}
+
+async function init(){
+  const stored = localStorage.getItem('mm_user');
+  userSession = localStorage.getItem('mm_session') || '';
+  if (!stored || !userSession) { showErr('برای مشاهده دوره باید وارد حساب کاربری شوید.', 'register-test.html', 'ورود'); return; }
+  const user = JSON.parse(stored);
+  userPhone = user.phone;
+  if (!courseId) { showErr('دوره‌ای انتخاب نشده.', 'dashboard-test.html', 'دوره‌های من'); return; }
+
+  try {
+    const r = await fetch(`mycourses2.php?t=${encodeURIComponent(userSession)}&c=${encodeURIComponent(courseId)}`, {cache:'no-store'});
+    if (r.status === 401) { sessionExpired(); return; }
+    const d = await r.json();
+    if (!d.ok) { showErr(d.error || 'دسترسی ندارید', '/#courses', 'مشاهده دوره‌ها'); return; }
+
+    videos = d.videos || [];
+    tokenTtl = d.token_ttl || 28800;
+    tokenIssuedAt = Date.now();
+    watermark = d.watermark || user.phone || '';
+    if (!videos.length) { showErr('ویدیویی برای این دوره آپلود نشده.', 'dashboard-test.html', 'بازگشت'); return; }
+
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('main').style.display = '';
+    document.getElementById('epCount').textContent = toFa(videos.length) + ' جلسه';
+
+    // هیچ جلسه‌ای خودکار پخش نمی‌شه — فقط آماده‌ی کلیک
+    const lastIdx = Math.max(0, videos.findIndex(v => v.id === localStorage.getItem('mm_last_' + courseId)));
+    const hasProgress = localStorage.getItem('mm_last_' + courseId);
+    document.getElementById('startTitle').textContent = hasProgress
+      ? `ادامه‌ی جلسه ${toFa(lastIdx+1)}: ${videos[lastIdx].title}`
+      : `شروع جلسه ۱: ${videos[0].title}`;
+    overlay.onclick = () => playVideo(lastIdx);
+
+    renderPlaylist();
+    startWatermark();
+    if (!IS_APPLE && videos.some(x => x.type === 'hls')) loadHlsLib().catch(()=>{});
+  } catch(e) {
+    showErr('خطا در ارتباط با سرور', 'dashboard-test.html', 'بازگشت');
+  }
+}
+
+function showErr(msg, link, txt){
+  document.getElementById('loading').style.display='none';
+  const el = document.getElementById('error');
+  el.style.display='block';
+  el.innerHTML = `<div class="ic">🔒</div><p style="font-size:16px;margin-bottom:16px">${msg}</p><a href="${link}">${txt} ←</a>`;
+}
+
+function linkify(text){
+  const esc = String(text || '')
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  const withLinks = esc.replace(/((?:https?:\/\/|www\.)[^\s<]+)/gi, (m) => {
+    let url = m, trail = '';
+    while (/[.,،؛!?)\]]$/.test(url)) { trail = url.slice(-1) + trail; url = url.slice(0, -1); }
+    const href = /^https?:\/\//i.test(url) ? url : 'https://' + url;
+    return `<a href="${href}" target="_blank" rel="noopener noreferrer">${url}</a>${trail}`;
+  });
+  return withLinks.replace(/\n/g, '<br>');
+}
+
+function renderPlaylist(){
+  document.getElementById('epList').innerHTML = videos.map((v,i)=>{
+    const at = v.attachments || [];
+    const isActive = i===current;
+    const watched = parseInt(localStorage.getItem('mm_pos_' + v.id) || '0') > 30;
+    return `
+    <div class="ep ${isActive?'active':''} ${watched && !isActive?'done':''}">
+      <button class="ep-row" onclick="playVideo(${i})">
+        <div class="ep-num">${watched && !isActive ? '✓' : toFa(i+1)}</div>
+        <div class="ep-info">
+          <h4>${v.title}</h4>
+          <span>${v.duration?`⏱ ${v.duration}`:''}${at.length?` &nbsp;·&nbsp; 📎 ${toFa(at.length)} فایل`:''}</span>
+        </div>
+        <span class="ep-play">${isActive ? '● در حال پخش' : '▶'}</span>
+      </button>
+      ${isActive && v.description ? `<div class="ep-desc desc-text">${linkify(v.description)}</div>` : ''}
+      ${at.length ? `<div class="ep-attach" style="${isActive?'':'display:none'}">${at.map(a=>`
+        <button onclick="downloadAttachment('${a.id}', this)" class="ep-attach-btn">
+          <span>📄</span><span class="t">${a.title}</span><span class="dl">⬇ دانلود</span>
+        </button>`).join('')}</div>` : ''}
+    </div>`;
+  }).join('');
+}
+
+/* توکن‌ها همراه لیست جلسات میان؛ فقط اگه صفحه بیشتر از ۷ ساعت باز مونده باشه تازه می‌شن */
+async function refreshTokenIfNeeded(v){
+  if (v.token && (Date.now() - tokenIssuedAt) < (tokenTtl - 3600) * 1000) return v.token;
+  const tr = await fetch(`videotoken2.php?t=${encodeURIComponent(userSession)}&v=${encodeURIComponent(v.id)}&c=${encodeURIComponent(courseId)}`, {cache:'no-store'});
+  if (tr.status === 401) { sessionExpired(); throw new Error('نشست منقضی شده؛ دوباره وارد شو'); }
+  const td = await tr.json();
+  if (!td.ok) throw new Error(td.error || 'خطا در دریافت دسترسی');
+  v.token = td.token;
+  return v.token;
+}
+
+/* ─────────── پخش تطبیقی (HLS) ───────────
+   برای جلسه‌هایی که با اسکریپت تبدیل آماده شدن: کیفیت خودکار بر اساس سرعت اینترنت هر کاربر */
+let hls = null;
+let hlsLibPromise = null;
+const IS_APPLE = /iP(hone|ad|od)/.test(navigator.userAgent) ||
+  (navigator.userAgent.includes('Safari') && !/Chrome|Chromium|Android|CriOS|FxiOS|Edg/.test(navigator.userAgent));
+
+function loadHlsLib(){
+  if (window.Hls) return Promise.resolve(window.Hls);
+  if (hlsLibPromise) return hlsLibPromise;
+  const tryLoad = src => new Promise((res, rej) => {
+    const s = document.createElement('script');
+    s.src = src; s.async = true;
+    s.onload = () => window.Hls ? res(window.Hls) : rej();
+    s.onerror = rej;
+    document.head.appendChild(s);
+  });
+  // اول نسخه‌ی روی هاست خودت (سریع در ایران)، بعد CDN
+  hlsLibPromise = tryLoad('/assets/hls.min.js')
+    .catch(() => tryLoad('https://cdn.jsdelivr.net/npm/hls.js@1/dist/hls.min.js'))
+    .catch(() => { hlsLibPromise = null; throw new Error('hls'); });
+  return hlsLibPromise;
+}
+
+function destroyHls(){
+  if (hls) { try { hls.destroy(); } catch(e){} hls = null; }
+  const q = document.getElementById('qualitySel');
+  if (q) { q.style.display = 'none'; q.innerHTML = ''; }
+}
+
+function hlsUrl(token, base){ return `${base}/hls.php?t=${encodeURIComponent(token)}&p=master.m3u8`; }
+
+function fillQualityMenu(){
+  const q = document.getElementById('qualitySel');
+  if (!q || !hls || !hls.levels || hls.levels.length < 2) return;
+  q.innerHTML = '<option value="-1">کیفیت: خودکار</option>' +
+    hls.levels.map((l, i) => `<option value="${i}">${toFa(l.height || '')}p</option>`).join('');
+  q.value = '-1';
+  q.style.display = '';
+}
+function setQuality(v){ if (hls) hls.currentLevel = parseInt(v, 10); }
+
+async function startHls(token, base, resumeAt){
+  destroyHls();
+  vid.playbackRate = currentSpeed;
+  const url = hlsUrl(token, base);
+
+  // آیفون/سافاری: پخش‌کننده‌ی داخلی خود اپل HLS رو بومی و بهینه پخش می‌کنه
+  if (IS_APPLE && vid.canPlayType('application/vnd.apple.mpegurl')) {
+    vid.preload = 'auto';
+    vid.src = url;
+    return;
+  }
+
+  let Hls;
+  try { Hls = await loadHlsLib(); } catch(e) { Hls = null; }
+
+  if (Hls && Hls.isSupported()) {
+    vid.removeAttribute('src');
+    hls = new Hls({
+      capLevelToPlayerSize: true,      // روی موبایل کیفیت بیش از اندازه‌ی صفحه دانلود نمی‌شه
+      startLevel: -1,                  // شروع خودکار بر اساس سرعت
+      abrEwmaDefaultEstimate: 700000,  // تخمین اولیه‌ی محافظه‌کارانه → شروع سریع، بعد بالا رفتن کیفیت
+      maxBufferLength: 30,
+      maxMaxBufferLength: 60,
+      backBufferLength: 30,
+      enableWorker: true,
+      fragLoadingMaxRetry: 6,
+      manifestLoadingMaxRetry: 4,
+      levelLoadingMaxRetry: 4,
+    });
+    hls.on(Hls.Events.MANIFEST_PARSED, () => {
+      fillQualityMenu();
+      if (resumeAt > 1) vid.currentTime = resumeAt;
+      vid.play().catch(()=>{ bufEl.style.display='none'; });
+    });
+    hls.on(Hls.Events.ERROR, (evt, data) => {
+      if (!data.fatal) return;
+      if (data.type === Hls.ErrorTypes.NETWORK_ERROR && base) {
+        // مسیر مستقیم جواب نداد → مسیر عادی سایت
+        sessionStorage.setItem('mm_direct_stream_bad', '1');
+        startHls(token, '', vid.currentTime || resumeAt);
+      } else if (data.type === Hls.ErrorTypes.MEDIA_ERROR) {
+        hls.recoverMediaError();
+      } else {
+        bufEl.style.display = 'none';
+        alert('خطا در پخش ویدیو. صفحه رو یک بار رفرش کن.');
+      }
+    });
+    hls.loadSource(url);
+    hls.attachMedia(vid);
+    return;
+  }
+
+  // مرورگرهایی که HLS رو خودشون پشتیبانی می‌کنن
+  if (vid.canPlayType('application/vnd.apple.mpegurl')) { vid.src = url; return; }
+  bufEl.style.display = 'none';
+  alert('مرورگرت از پخش این ویدیو پشتیبانی نمی‌کنه. لطفاً از Chrome یا Safari استفاده کن.');
+}
+
+let directTimer = null;
+function setSource(token, base){
+  clearTimeout(directTimer);
+  destroyHls();
+  vid.preload = 'auto';
+  vid.src = `${base}/stream.php?t=${encodeURIComponent(token)}`;
+  vid.playbackRate = currentSpeed;
+  // اگه مسیر مستقیم ظرف ۶ ثانیه جواب نداد، برو سراغ مسیر عادی
+  if (base) {
+    directTimer = setTimeout(() => {
+      if (vid.readyState < 1) {
+        sessionStorage.setItem('mm_direct_stream_bad', '1');
+        setSource(token, '');
+        vid.play().catch(()=>{});
+      }
+    }, 6000);
+    vid.addEventListener('loadedmetadata', () => clearTimeout(directTimer), { once:true });
+  }
+}
+
+/* وقتی شروع پخش (روی اینترنت کند) طول می‌کشه، به کاربر می‌گیم چه خبره تا عجله نکنه و دوباره کلیک نکنه */
+let waitTimers = [];
+function clearWaitMsg(){
+  waitTimers.forEach(clearTimeout); waitTimers = [];
+  const t = document.getElementById('bufText'); if (t) t.textContent = '';
+}
+function startWaitMsg(){
+  clearWaitMsg();
+  const t = document.getElementById('bufText'); if (!t) return;
+  waitTimers.push(setTimeout(() => { t.textContent = 'در حال آماده‌سازی ویدیو…'; }, 2500));
+  waitTimers.push(setTimeout(() => { t.textContent = 'اینترنتت کمی کنده و ویدیو در حال دریافته. لطفاً صبر کن و دوباره کلیک نکن'; }, 9000));
+}
+
+async function playVideo(i){
+  const v = videos[i];
+  if (!v) return;
+  // کلیک دوباره روی همون جلسه‌ای که داره لود می‌شه: دانلود از اول شروع نشه، فقط ادامه بده
+  if (i === current && vid.getAttribute('src') && !vid.error) {
+    overlay.style.display = 'none';
+    vid.play().catch(()=>{});
+    return;
+  }
+  current = i;
+  localStorage.setItem('mm_last_' + courseId, v.id);
+  overlay.style.display = 'none';
+  { const sp = bufEl.querySelector('.sp'); if (sp) sp.style.display = ''; }
+  bufEl.style.display = 'flex';
+  startWaitMsg();
+
+  document.getElementById('vTitle').textContent = v.title;
+  document.getElementById('vDesc').innerHTML = linkify(v.description || '');
+  document.getElementById('vMeta').textContent = [`جلسه ${toFa(i+1)} از ${toFa(videos.length)}`, v.duration ? `⏱ ${v.duration}` : ''].filter(Boolean).join(' • ');
+  renderPlaylist();
+
+  // روی موبایل پلیر بالای صفحه ثابته؛ فقط برگرد بالا تا پلیر کامل دیده بشه
+  if (window.innerWidth <= 900) window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  let token = v.token;
+  const fresh = token && (Date.now() - tokenIssuedAt) < (tokenTtl - 3600) * 1000;
+  if (!fresh) {
+    try { token = await refreshTokenIfNeeded(v); }
+    catch(e) { bufEl.style.display='none'; alert(e.message); return; }
+  }
+
+  const saved = parseInt(localStorage.getItem('mm_pos_' + v.id) || '0');
+
+  if (v.type === 'hls') {
+    // hls.js خودش بعد از آماده شدن پخش رو شروع و موقعیت قبلی رو اعمال می‌کنه
+    const resume = (saved > 10) ? saved : 0;
+    const usingNative = IS_APPLE && vid.canPlayType('application/vnd.apple.mpegurl');
+    if (!usingNative) { await startHls(token, streamBase(), resume); return; }
+    // سافاری بومی: src بدون هیچ مکثی تنظیم می‌شه تا iOS کلیک کاربر رو گم نکنه، بعد مثل MP4 ادامه می‌ده
+    startHls(token, streamBase(), resume);
+  } else {
+    // src همزمان با کلیک تنظیم می‌شه → مرورگر (مخصوصاً iOS) پخش رو فوراً شروع می‌کنه
+    setSource(token, streamBase());
+  }
+
+  vid.addEventListener('loadedmetadata', function once(){
+    vid.removeEventListener('loadedmetadata', once);
+    if (saved > 10 && saved < vid.duration - 15) vid.currentTime = saved;
+  });
+
+  const p = vid.play();
+  if (p && p.catch) p.catch(()=>{ bufEl.style.display='none'; });
+}
+
+/* اگه مسیر مستقیم در دسترس نبود، یک بار خودکار به مسیر عادی برمی‌گرده */
+vid.addEventListener('error', () => {
+  const src = vid.currentSrc || vid.src || '';
+  if (DIRECT_STREAM_HOST && src.startsWith(DIRECT_STREAM_HOST)) {
+    sessionStorage.setItem('mm_direct_stream_bad', '1');
+    const v = videos[current];
+    if (v && v.token && v.type === 'hls') {
+      startHls(v.token, '', vid.currentTime);
+      vid.play().catch(()=>{});
+    } else if (v && v.token) {
+      const t = vid.currentTime;
+      setSource(v.token, '');
+      vid.addEventListener('loadedmetadata', function once(){ vid.removeEventListener('loadedmetadata', once); if (t>1) vid.currentTime=t; });
+      vid.play().catch(()=>{});
+    }
+  } else {
+    // مسیر عادی هم جواب نداد → دلیل احتمالی رو به کاربر بگو
+    clearWaitMsg();
+    const sp = bufEl.querySelector('.sp'); if (sp) sp.style.display = 'none';
+    const bt = document.getElementById('bufText');
+    if (bt) bt.textContent = 'پخش ویدیو ممکن نشد. اگه IDM یا افزونه‌ی دانلود ویدیو فعاله غیرفعالش کن، از Chrome یا Safari به‌روز استفاده کن و صفحه رو رفرش کن.';
+    bufEl.style.display = 'flex';
+  }
+});
+
+function renderAttachments(){}
+
+async function downloadAttachment(attachId, btn){
+  const dl = btn.querySelector('.dl');
+  const original = dl ? dl.textContent : '';
+  btn.disabled = true;
+  if (dl) dl.textContent = '...';
+  try {
+    const r = await fetch(`attachtoken2.php?t=${encodeURIComponent(userSession)}&a=${encodeURIComponent(attachId)}`);
+    if (r.status === 401) { sessionExpired(); return; }
+    const d = await r.json();
+    btn.disabled = false;
+    if (dl) dl.textContent = original;
+    if (d.ok) window.location.href = `download.php?t=${encodeURIComponent(d.token)}`;
+    else alert(d.error || 'خطا در دریافت فایل');
+  } catch(e) {
+    btn.disabled = false;
+    if (dl) dl.textContent = original;
+    alert('خطا در ارتباط با سرور');
+  }
+}
+
+function setSpeed(s, btn){
+  currentSpeed = s;
+  vid.playbackRate = s;
+  document.querySelectorAll('[data-speed]').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+/* نشانگر بارگذاری */
+vid.addEventListener('waiting', () => { bufEl.style.display='flex'; });
+vid.addEventListener('playing', () => { bufEl.style.display='none'; clearWaitMsg(); });
+vid.addEventListener('canplay', () => { bufEl.style.display='none'; clearWaitMsg(); });
+vid.addEventListener('pause', () => { bufEl.style.display='none'; clearWaitMsg(); });
+
+/* ذخیره موقعیت پخش */
+let saveTimer = null;
+vid.addEventListener('timeupdate', () => {
+  if (saveTimer) return;
+  saveTimer = setTimeout(() => {
+    saveTimer = null;
+    if (videos[current]) localStorage.setItem('mm_pos_' + videos[current].id, Math.floor(vid.currentTime));
+  }, 5000);
+});
+
+/* واترمارک پویا */
+function startWatermark(){
+  const wrap = document.getElementById('videoWrap');
+  const pos = [
+    {top:'8%',left:'6%'},{top:'8%',right:'6%'},
+    {bottom:'18%',left:'6%'},{bottom:'18%',right:'6%'},
+    {top:'45%',left:'8%'},{top:'45%',right:'8%'},
+    {top:'25%',left:'38%'},{bottom:'35%',right:'32%'},
+  ];
+  for (let k=0;k<3;k++){
+    const wm = document.createElement('div');
+    wm.className='wm';
+    wm.textContent = watermark;
+    wrap.appendChild(wm);
+    const move=()=>{
+      const p = pos[Math.floor(Math.random()*pos.length)];
+      wm.style.cssText='position:absolute;color:rgba(255,255,255,.32);font-size:13px;font-family:monospace;pointer-events:none;z-index:50;text-shadow:0 1px 4px rgba(0,0,0,.95);letter-spacing:1px;white-space:nowrap;';
+      Object.entries(p).forEach(([key,val])=>wm.style[key]=val);
+    };
+    move();
+    setInterval(move, 4000 + k*1300);
+  }
+}
+
+/* محافظت */
+document.addEventListener('keydown', e=>{
+  if (e.key==='F12' ||
+      (e.ctrlKey&&e.shiftKey&&['I','J','C'].includes(e.key.toUpperCase())) ||
+      (e.ctrlKey&&['U','S','P'].includes(e.key.toUpperCase())) ||
+      e.key==='PrintScreen') {
+    e.preventDefault(); return false;
+  }
+});
+document.addEventListener('visibilitychange',()=>{
+  if (document.hidden && !vid.paused) vid.pause();
+  const w=document.getElementById('videoWrap');
+  if(w) w.style.filter = document.hidden?'blur(40px)':'none';
+});
+window.addEventListener('blur',()=>{ const w=document.getElementById('videoWrap'); if(w) w.style.filter='blur(40px)'; });
+window.addEventListener('focus',()=>{ const w=document.getElementById('videoWrap'); if(w) w.style.filter='none'; });
+vid.addEventListener('contextmenu', e=>e.preventDefault());
+/* سرعت پخش بیشتر از ۲× مجاز نیست؛ ضبط سریع (مثلاً ۱۶×) ممکن نیست و ضبط کامل یه دوره خیلی طولانی می‌شه */
+vid.addEventListener('ratechange', () => { if (vid.playbackRate > 2) vid.playbackRate = currentSpeed; });
+
+/* فول‌اسکرین: دکمه‌ی بومیِ فول‌اسکرینِ خودِ مرورگر روی ویدیو با controlsList="nofullscreen" مخفی شده،
+   چون اون فقط خودِ تگ video رو فول‌اسکرین می‌کنه و واترمارک (که یه div جداست، کنار ویدیو) دیده نمی‌شه.
+   به‌جاش یه دکمه‌ی خودمون (fsBtn) هست که مستقیماً کل جعبه (videoWrap، شامل واترمارک) رو فول‌اسکرین می‌کنه.
+   نکته: تست شد که «اول exit بعد request روی عنصر دیگه» (جابه‌جایی غیرمستقیم) توسط کروم رد می‌شه
+   («اجازه‌ی کاربر» از بین می‌ره)؛ به همین خاطر باید از همون اول مستقیم روی wrap درخواست بدیم.
+   روی آیفون/سافاری این دکمه اثر نداره چون اونجا ویدیو با پلیر بومی خودِ اپل فول‌اسکرین می‌شه. */
+function togglePlayPause(){
+  if (vid.paused) vid.play().catch(()=>{});
+  else vid.pause();
+}
+
+function toggleFullscreen(){
+  const wrap = document.getElementById('videoWrap');
+  const fsEl = document.fullscreenElement || document.webkitFullscreenElement;
+  if (fsEl) {
+    (document.exitFullscreen ? document.exitFullscreen() : document.webkitExitFullscreen()).catch(()=>{});
+  } else {
+    const req = wrap.requestFullscreen || wrap.webkitRequestFullscreen;
+    if (req) req.call(wrap).catch(()=>{});
+  }
+}
+
+init();
+</script>
+</body>
+</html>

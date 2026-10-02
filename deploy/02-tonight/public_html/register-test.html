@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta name="robots" content="noindex,nofollow">
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ورود / ثبت‌نام | آکادمی مهدی محرابی</title>
+<link rel="icon" href="assets/favicon.ico" sizes="any"/>
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png"/>
+<link rel="preload" href="/assets/fonts/vazirmatn-arabic-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/fonts/fonts.css">
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<style>
+:root{--bg:#0c0b09;--bg-2:#15130f;--ink:#f4f1ea;--ink-2:#d8d3c8;--muted:#8f897e;--line:rgba(244,241,234,.12);--line-2:rgba(244,241,234,.20);--accent:#c98a5a;--accent-2:#a85a32;--ok:#7ec77e;--err:#e07a6a;--serif:'Fraunces','Vazirmatn',serif;--sans:'Vazirmatn',system-ui,sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--sans);background:var(--bg);color:var(--ink);min-height:100vh;display:flex;flex-direction:column;-webkit-font-smoothing:antialiased}
+.nav{display:flex;justify-content:space-between;align-items:center;padding:18px 40px;border-bottom:1px solid var(--line)}
+.nav .brand{font-family:var(--serif);font-style:italic;font-size:20px;color:var(--ink);text-decoration:none}
+.nav .brand b{font-style:normal}
+.nav a{color:var(--muted);text-decoration:none;font-size:13px}
+.wrap{flex:1;display:flex;align-items:center;justify-content:center;padding:40px 20px}
+.card{background:var(--bg-2);border:1px solid var(--line);border-radius:12px;padding:40px 36px;width:100%;max-width:420px;text-align:center}
+.card .icon{font-size:40px;margin-bottom:14px}
+.card h1{font-family:var(--serif);font-weight:300;font-size:26px;margin-bottom:8px}
+.card .sub{color:var(--muted);font-size:13px;line-height:1.8;margin-bottom:28px}
+.methods{display:flex;gap:0;margin-bottom:24px;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.method-btn{flex:1;padding:10px 6px;background:none;border:none;color:var(--muted);font-family:var(--sans);font-size:12px;cursor:pointer;transition:all .2s}
+.method-btn.active{background:var(--accent);color:#0a0a0a;font-weight:600}
+.field{margin-bottom:16px;text-align:right}
+.field label{display:block;font-size:11px;letter-spacing:1.5px;color:var(--muted);margin-bottom:7px}
+.field input{width:100%;background:var(--bg);border:1px solid var(--line);padding:13px 14px;color:var(--ink);font-family:var(--sans);font-size:15px;border-radius:8px;outline:none;transition:border .25s;text-align:center;letter-spacing:1px}
+.field input:focus{border-color:var(--accent)}
+.btn{width:100%;background:var(--accent);color:#0a0a0a;border:none;padding:14px;font-family:var(--sans);font-size:14px;font-weight:600;cursor:pointer;border-radius:8px;transition:background .3s}
+.btn:hover{background:var(--accent-2);color:#fff}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn-ghost{background:none;border:none;color:var(--muted);font-family:var(--sans);font-size:13px;cursor:pointer;margin-top:14px;transition:color .2s}
+.btn-ghost:hover{color:var(--accent)}
+.btn-ghost:disabled{opacity:.5;cursor:not-allowed}
+.msg{padding:11px 14px;border-radius:8px;font-size:13px;margin-top:14px;display:none;text-align:right}
+.msg.ok{background:rgba(126,199,126,.1);border:1px solid var(--ok);color:var(--ok);display:block}
+.msg.err{background:rgba(224,122,106,.1);border:1px solid var(--err);color:var(--err);display:block}
+.phone-display{color:var(--accent);font-size:15px;direction:ltr;margin-bottom:6px}
+.spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(10,10,10,.3);border-top-color:#0a0a0a;border-radius:50%;animation:spin .6s linear infinite;vertical-align:middle;margin-left:8px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.timer{color:var(--muted);font-size:12px;margin-top:10px}
+.divider{display:flex;align-items:center;gap:10px;margin:20px 0;color:var(--muted);font-size:11px}
+.divider::before,.divider::after{content:"";flex:1;height:1px;background:var(--line)}
+#googleBtnWrap{display:flex;justify-content:center;margin-bottom:6px}
+.link-row{display:flex;justify-content:space-between;margin-top:6px}
+.link-row button{background:none;border:none;color:var(--muted);font-size:12px;cursor:pointer}
+.link-row button:hover{color:var(--accent)}
+footer{padding:20px 40px;border-top:1px solid var(--line);text-align:center}
+footer p{font-size:12px;color:var(--muted)}
+footer a{color:var(--accent);text-decoration:none}
+@media(max-width:480px){.nav{padding:16px 20px}.card{padding:30px 20px}}
+</style>
+</head>
+<body>
+<div style="position:fixed;bottom:6px;left:6px;z-index:99999;background:#c98a5a;color:#000;padding:2px 9px;border-radius:10px;font:600 11px sans-serif;opacity:.9;pointer-events:none">TEST</div>
+<header class="nav">
+  <a href="index.html" class="brand">Mehdi <b>Mehrabi</b></a>
+  <a href="index.html">← بازگشت</a>
+</header>
+
+<div class="wrap">
+  <div class="card">
+
+    <div id="methodPicker">
+      <div class="icon">👋</div>
+      <h1>ورود / ثبت‌نام</h1>
+      <p class="sub">یکی از روش‌های زیر رو انتخاب کن</p>
+
+      <div id="googleBtnWrap"></div>
+
+      <div class="divider">یا</div>
+
+      <div class="methods">
+        <button class="method-btn active" onclick="showMethod('otp')">📱 کد پیامکی</button>
+        <button class="method-btn" onclick="showMethod('password')">🔒 رمز عبور</button>
+      </div>
+    </div>
+
+    <div id="m-otp">
+      <div class="field">
+        <input id="phone" type="tel" inputmode="numeric" placeholder="09xxxxxxxxx" dir="ltr" maxlength="11" autocomplete="tel"/>
+      </div>
+      <button class="btn" id="sendBtn" onclick="sendCode()">دریافت کد</button>
+      <div class="msg" id="phone-msg"></div>
+    </div>
+
+    <div id="m-password" style="display:none">
+      <div class="field">
+        <input id="loginId" type="text" placeholder="شماره موبایل یا یوزرنیم" dir="ltr" autocomplete="username"/>
+      </div>
+      <div class="field">
+        <input id="loginPass" type="password" placeholder="رمز عبور" dir="ltr" autocomplete="current-password"/>
+      </div>
+      <button class="btn" id="loginBtn" onclick="loginPassword()">ورود</button>
+      <div class="link-row">
+        <button onclick="showMethod('reset')">رمز رو فراموش کردم</button>
+        <span></span>
+      </div>
+      <div class="msg" id="pass-msg"></div>
+    </div>
+
+    <div id="m-code" style="display:none">
+      <div class="icon">🔐</div>
+      <h1 style="font-size:22px">کد تأیید</h1>
+      <p class="sub">کد ۶ رقمی ارسال‌شده به<br/><span class="phone-display" id="phoneDisplay"></span></p>
+      <div class="field">
+        <input id="code" type="text" inputmode="numeric" placeholder="۱۲۳۴۵۶" dir="ltr" maxlength="6" autocomplete="one-time-code"/>
+      </div>
+      <button class="btn" id="verifyBtn" onclick="verifyCode()">ورود</button>
+      <div class="timer" id="timer"></div>
+      <button class="btn-ghost" id="resendBtn" onclick="sendCode(true)" disabled>ارسال مجدد کد</button>
+      <div class="msg" id="code-msg"></div>
+    </div>
+
+    <div id="m-reset" style="display:none">
+      <div class="icon">🔑</div>
+      <h1 style="font-size:22px">بازیابی رمز عبور</h1>
+      <p class="sub">شماره موبایلت رو وارد کن تا کد تأیید برات بفرستیم</p>
+      <div class="field">
+        <input id="resetPhone" type="tel" placeholder="09xxxxxxxxx" dir="ltr" maxlength="11"/>
+      </div>
+      <button class="btn" id="resetSendBtn" onclick="sendResetCode()">ارسال کد</button>
+      <div class="msg" id="reset-msg"></div>
+    </div>
+
+    <div id="m-reset-code" style="display:none">
+      <div class="icon">🔑</div>
+      <h1 style="font-size:22px">رمز جدید</h1>
+      <p class="sub">کد ارسال‌شده و رمز جدیدت رو وارد کن</p>
+      <div class="field"><input id="resetCode" type="text" inputmode="numeric" placeholder="کد ۶ رقمی" dir="ltr" maxlength="6"/></div>
+      <div class="field"><input id="resetNewPass" type="password" placeholder="رمز جدید (حداقل ۶ کاراکتر)" dir="ltr"/></div>
+      <button class="btn" id="resetConfirmBtn" onclick="confirmReset()">تغییر رمز و ورود</button>
+      <div class="msg" id="reset-code-msg"></div>
+    </div>
+
+    <button class="btn-ghost" id="backBtn" onclick="backToMethods()" style="display:none">← بازگشت</button>
+
+  </div>
+</div>
+
+<footer><p>آکادمی مهدی محرابی | <a href="index.html">mehdimehrabi.ir</a></p></footer>
+
+<script>
+const FN = 'https://rknsiuyfhxnmhnfesfhh.supabase.co/functions/v1';
+const GOOGLE_CLIENT_ID = '651019426684-odq3v48g8u5rkkoiicf7h3oboj302cm5.apps.googleusercontent.com';
+let currentPhone = '';
+let timerInterval = null;
+
+// ارقام فارسی/عربی → انگلیسی (قبلاً با کیبورد فارسی، شماره و کد کاملاً پاک می‌شد)
+function fa2en(s){
+  return String(s == null ? '' : s)
+    .replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d))
+    .replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d));
+}
+// بعد از ورود به همان صفحه‌ای برگرد که کاربر از آنجا آمده بود (مثلاً صفحه‌ی خرید دوره)؛ فقط آدرس‌های همین سایت
+function afterLoginUrl(){
+  try {
+    const r = localStorage.getItem('mm_redirect');
+    localStorage.removeItem('mm_redirect');
+    if (r) {
+      const u = new URL(r, location.origin);
+      if (u.origin === location.origin && !/\/(register|admin)(\.html)?$/i.test(u.pathname)) return u.pathname + u.search + u.hash;
+    }
+  } catch(e){}
+  return 'dashboard-test.html';
+}
+
+// فقط اگه نشست معتبر (توکن) داشته باشه مستقیم می‌ره داشبورد؛ کاربران قدیمی بدون توکن باید دوباره وارد شن
+if (localStorage.getItem('mm_user') && localStorage.getItem('mm_session')) location.href = afterLoginUrl();
+else { localStorage.removeItem('mm_user'); localStorage.removeItem('mm_session'); }
+function saveLogin(d){
+  localStorage.setItem('mm_user', JSON.stringify(d.user));
+  if (d.session && d.session.token) localStorage.setItem('mm_session', d.session.token);
+}
+
+function hideAll(){
+  ['m-otp','m-password','m-code','m-reset','m-reset-code'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.style.display = 'none';
+  });
+}
+function showMethod(m){
+  hideAll();
+  document.getElementById('backBtn').style.display = (m==='otp'||m==='password') ? 'none' : 'inline-block';
+  document.getElementById('methodPicker').style.display = (m==='otp'||m==='password') ? 'block' : 'none';
+  if (m === 'otp'){ document.getElementById('m-otp').style.display='block'; highlightTab('otp'); }
+  else if (m === 'password'){ document.getElementById('m-password').style.display='block'; highlightTab('password'); }
+  else if (m === 'code') document.getElementById('m-code').style.display = 'block';
+  else if (m === 'reset') document.getElementById('m-reset').style.display = 'block';
+  else if (m === 'reset-code') document.getElementById('m-reset-code').style.display = 'block';
+}
+function highlightTab(m){
+  document.querySelectorAll('.method-btn').forEach((b,i)=>b.classList.toggle('active', (m==='otp'&&i===0)||(m==='password'&&i===1)));
+}
+function backToMethods(){ clearInterval(timerInterval); showMethod('otp'); }
+showMethod('otp');
+
+function showMsg(id, text, type){
+  const el = document.getElementById(id);
+  el.textContent = text; el.className = 'msg ' + type;
+}
+
+function startTimer(seconds, btnId, timerId){
+  const btn = document.getElementById(btnId);
+  const timerEl = document.getElementById(timerId);
+  btn.disabled = true;
+  let left = seconds;
+  clearInterval(timerInterval);
+  timerInterval = setInterval(() => {
+    left--;
+    timerEl.textContent = left > 0 ? `ارسال مجدد تا ${left} ثانیه دیگه` : '';
+    if (left <= 0){ clearInterval(timerInterval); btn.disabled = false; timerEl.textContent = ''; }
+  }, 1000);
+  timerEl.textContent = `ارسال مجدد تا ${left} ثانیه دیگه`;
+}
+
+async function sendCode(isResend){
+  const phoneInput = document.getElementById('phone');
+  const phone = (isResend ? currentPhone : fa2en(phoneInput.value).trim()).replace(/[^0-9]/g,'');
+  if (!phone.match(/^09\d{9}$/)){ showMsg('phone-msg', 'شماره موبایل معتبر نیست', 'err'); return; }
+  const btn = isResend ? document.getElementById('resendBtn') : document.getElementById('sendBtn');
+  const original = btn.textContent;
+  btn.disabled = true; btn.innerHTML = 'در حال ارسال...<span class="spinner"></span>';
+  try {
+    const r = await fetch(`${FN}/user-auth`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ action:'send_otp', phone }) });
+    const d = await r.json();
+    btn.disabled = false; btn.textContent = original;
+    if (d.ok){
+      currentPhone = phone;
+      document.getElementById('phoneDisplay').textContent = phone;
+      showMethod('code');
+      startTimer(60, 'resendBtn', 'timer');
+      document.getElementById('code').focus();
+      if (isResend) showMsg('code-msg', 'کد جدید ارسال شد ✓', 'ok');
+    } else showMsg(isResend ? 'code-msg' : 'phone-msg', d.error || 'خطا در ارسال کد', 'err');
+  } catch(e){ btn.disabled=false; btn.textContent=original; showMsg('phone-msg','خطا در ارتباط با سرور','err'); }
+}
+async function verifyCode(){
+  const code = fa2en(document.getElementById('code').value).trim().replace(/[^0-9]/g,'');
+  if (code.length !== 6){ showMsg('code-msg','کد باید ۶ رقم باشه','err'); return; }
+  const btn = document.getElementById('verifyBtn');
+  btn.disabled = true; btn.innerHTML = 'در حال بررسی...<span class="spinner"></span>';
+  try {
+    const r = await fetch(`${FN}/user-auth`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ action:'verify_otp', phone: currentPhone, code }) });
+    const d = await r.json();
+    btn.disabled = false; btn.textContent = 'ورود';
+    if (d.ok){
+      saveLogin(d);
+      showMsg('code-msg', 'ورود موفق! در حال انتقال...', 'ok');
+      setTimeout(() => location.href = afterLoginUrl(), 800);
+    } else showMsg('code-msg', d.error || 'کد اشتباهه', 'err');
+  } catch(e){ btn.disabled=false; btn.textContent='ورود'; showMsg('code-msg','خطا در ارتباط با سرور','err'); }
+}
+
+async function loginPassword(){
+  const identifier = fa2en(document.getElementById('loginId').value).trim();
+  const password = document.getElementById('loginPass').value;
+  if (!identifier || !password){ showMsg('pass-msg','شماره/یوزرنیم و رمز رو وارد کن','err'); return; }
+  const btn = document.getElementById('loginBtn');
+  btn.disabled = true; btn.innerHTML = 'در حال ورود...<span class="spinner"></span>';
+  try {
+    const r = await fetch(`${FN}/user-auth`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ action:'login_password', identifier, password }) });
+    const d = await r.json();
+    btn.disabled = false; btn.textContent = 'ورود';
+    if (d.ok){
+      saveLogin(d);
+      showMsg('pass-msg','ورود موفق! در حال انتقال...','ok');
+      setTimeout(() => location.href = afterLoginUrl(), 700);
+    } else showMsg('pass-msg', d.error || 'ورود ناموفق', 'err');
+  } catch(e){ btn.disabled=false; btn.textContent='ورود'; showMsg('pass-msg','خطا در ارتباط با سرور','err'); }
+}
+
+async function sendResetCode(){
+  const phone = fa2en(document.getElementById('resetPhone').value).trim();
+  if (!phone.match(/^09\d{9}$/)){ showMsg('reset-msg','شماره موبایل معتبر نیست','err'); return; }
+  currentPhone = phone;
+  const btn = document.getElementById('resetSendBtn');
+  btn.disabled = true; btn.innerHTML = 'در حال ارسال...<span class="spinner"></span>';
+  try {
+    const r = await fetch(`${FN}/user-auth`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ action:'send_otp', phone }) });
+    const d = await r.json();
+    btn.disabled = false; btn.textContent = 'ارسال کد';
+    if (d.ok){ showMethod('reset-code'); }
+    else showMsg('reset-msg', d.error || 'خطا در ارسال کد', 'err');
+  } catch(e){ btn.disabled=false; btn.textContent='ارسال کد'; showMsg('reset-msg','خطا در ارتباط با سرور','err'); }
+}
+async function confirmReset(){
+  const code = fa2en(document.getElementById('resetCode').value).trim();
+  const newPass = document.getElementById('resetNewPass').value;
+  if (code.length !== 6){ showMsg('reset-code-msg','کد باید ۶ رقم باشه','err'); return; }
+  if (newPass.length < 6){ showMsg('reset-code-msg','رمز باید حداقل ۶ کاراکتر باشه','err'); return; }
+  const btn = document.getElementById('resetConfirmBtn');
+  btn.disabled = true; btn.innerHTML = 'در حال ثبت...<span class="spinner"></span>';
+  try {
+    const r = await fetch(`${FN}/user-auth`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ action:'reset_password', phone: currentPhone, code, new_password: newPass }) });
+    const d = await r.json();
+    btn.disabled = false; btn.textContent = 'تغییر رمز و ورود';
+    if (d.ok){
+      showMsg('reset-code-msg','رمز تغییر کرد! حالا با رمز جدید وارد شو','ok');
+      setTimeout(() => { backToMethods(); showMethod('password'); }, 1200);
+    } else showMsg('reset-code-msg', d.error || 'خطا', 'err');
+  } catch(e){ btn.disabled=false; btn.textContent='تغییر رمز و ورود'; showMsg('reset-code-msg','خطا در ارتباط با سرور','err'); }
+}
+
+function handleGoogleCredential(response){
+  try {
+    const payload = JSON.parse(atob(response.credential.split('.')[1]));
+    fetch(`${FN}/user-auth`, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ action:'google_login', email: payload.email, name: payload.name }),
+    }).then(async r=>{
+      const txt = await r.text();
+      let d;
+      try { d = JSON.parse(txt); } catch(e){ showMsg('phone-msg', 'پاسخ نامعتبر از سرور: '+txt.substring(0,150), 'err'); return; }
+      if (d.ok){ saveLogin(d); location.href = afterLoginUrl(); }
+      else showMsg('phone-msg', d.error || 'خطا در ورود با گوگل', 'err');
+    }).catch(err=>{
+      showMsg('phone-msg', 'خطای اتصال به سرور: '+err.message, 'err');
+    });
+  } catch(e){
+    showMsg('phone-msg', 'خطا در پردازش پاسخ گوگل: '+e.message, 'err');
+  }
+}
+window.addEventListener('load', () => {
+  if (!GOOGLE_CLIENT_ID) return;
+  if (window.google && google.accounts) {
+    google.accounts.id.initialize({ client_id: GOOGLE_CLIENT_ID, callback: handleGoogleCredential });
+    google.accounts.id.renderButton(document.getElementById('googleBtnWrap'), { theme:'outline', size:'large', width:320, text:'continue_with', locale:'fa' });
+  }
+});
+
+document.getElementById('phone').addEventListener('keypress', e => { if(e.key==='Enter') sendCode(); });
+document.getElementById('code').addEventListener('keypress', e => { if(e.key==='Enter') verifyCode(); });
+document.getElementById('loginPass').addEventListener('keypress', e => { if(e.key==='Enter') loginPassword(); });
+document.getElementById('phone').addEventListener('input', e => { e.target.value = fa2en(e.target.value).replace(/[^0-9]/g,''); });
+document.getElementById('code').addEventListener('input', e => {
+  e.target.value = fa2en(e.target.value).replace(/[^0-9]/g,'');
+  if (e.target.value.length === 6) verifyCode();
+});
+</script>
+</body>
+</html>

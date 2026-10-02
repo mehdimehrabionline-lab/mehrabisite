@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>نتیجه پرداخت | آکادمی مهدی محرابی</title>
+<link rel="icon" type="image/png" href="/assets/favicon-32.png"/>
+<link rel="preload" href="/assets/fonts/vazirmatn-arabic-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/fonts/fonts.css">
+<style>
+:root{--bg:#0c0b09;--bg-2:#15130f;--ink:#f4f1ea;--ink-2:#d8d3c8;--muted:#8f897e;--line:rgba(244,241,234,.12);--accent:#c98a5a;--accent-2:#a85a32;--ok:#7ec77e;--err:#e07a6a;--serif:'Fraunces','Vazirmatn',serif;--sans:'Vazirmatn',system-ui,sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--sans);background:var(--bg);color:var(--ink);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.card{background:var(--bg-2);border:1px solid var(--line);border-radius:16px;padding:48px 36px;max-width:440px;width:100%;text-align:center}
+.icon{font-size:56px;margin-bottom:20px}
+h1{font-family:var(--serif);font-weight:300;font-size:26px;margin-bottom:12px}
+p{font-size:14px;line-height:2;color:var(--ink-2);margin-bottom:8px}
+.detail{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:18px;margin:24px 0;text-align:right}
+.detail-row{display:flex;justify-content:space-between;padding:8px 0;font-size:13px;border-bottom:1px solid var(--line)}
+.detail-row:last-child{border:0}
+.detail-row .lbl{color:var(--muted)}
+.detail-row .val{font-weight:500}
+.btn{display:inline-block;background:var(--accent);color:#0a0a0a;padding:14px 32px;border-radius:8px;text-decoration:none;font-size:14px;font-weight:600;margin-top:8px;transition:background .3s}
+.btn:hover{background:var(--accent-2);color:#fff}
+.btn-ghost{display:inline-block;color:var(--muted);text-decoration:none;font-size:13px;margin-top:16px}
+.spinner{width:38px;height:38px;border:3px solid var(--line);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 20px}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<div class="card" id="card">
+  <div class="spinner"></div>
+  <h1>در حال بررسی پرداخت</h1>
+  <p>لطفاً چند لحظه صبر کنید…</p>
+</div>
+
+<script>
+const params = new URLSearchParams(location.search);
+const trackId = params.get('trackId');
+const success = params.get('success');
+const card = document.getElementById('card');
+
+function render(html){ card.innerHTML = html; }
+
+async function verify(){
+  if (!trackId) {
+    render(`<div class="icon">⚠️</div><h1>اطلاعات ناقص</h1>
+      <p>شناسه تراکنش یافت نشد.</p>
+      <a href="index.html" class="btn">بازگشت به سایت</a>`);
+    return;
+  }
+
+  if (success === '0') {
+    render(`<div class="icon">❌</div><h1>پرداخت لغو شد</h1>
+      <p>شما از پرداخت انصراف دادید یا تراکنش ناموفق بود.<br/>مبلغی از حساب شما کسر نشده است.</p>
+      <a href="index.html#courses" class="btn">بازگشت به دوره‌ها</a>`);
+    return;
+  }
+
+  try {
+    const r = await fetch(`verify.php?trackId=${encodeURIComponent(trackId)}`);
+    const d = await r.json();
+
+    if (d.ok) {
+      render(`<div class="icon">✅</div>
+        <h1>پرداخت موفق!</h1>
+        <p>دسترسی شما به دوره فعال شد.</p>
+        <div class="detail">
+          <div class="detail-row"><span class="lbl">دوره</span><span class="val">${d.course_title||'—'}</span></div>
+          ${d.amount?`<div class="detail-row"><span class="lbl">مبلغ</span><span class="val">${Number(d.amount).toLocaleString('fa-IR')} تومان</span></div>`:''}
+          ${d.ref_number?`<div class="detail-row"><span class="lbl">کد پیگیری</span><span class="val" dir="ltr">${d.ref_number}</span></div>`:''}
+        </div>
+        <a href="dashboard.html" class="btn">مشاهده دوره‌های من</a>
+        <br/><a href="index.html" class="btn-ghost">بازگشت به صفحه اصلی</a>`);
+    } else {
+      render(`<div class="icon">❌</div><h1>پرداخت ناموفق</h1>
+        <p>${d.error||'خطایی رخ داد'}</p>
+        <p style="font-size:12px;color:var(--muted)">اگر مبلغی از حساب شما کسر شده، ظرف ۷۲ ساعت بازمی‌گردد.<br/>پشتیبانی: ۰۹۱۷۰۰۷۳۰۱۰</p>
+        <a href="index.html#courses" class="btn">بازگشت به دوره‌ها</a>`);
+    }
+  } catch(e) {
+    render(`<div class="icon">⚠️</div><h1>خطای ارتباط</h1>
+      <p>نتوانستیم وضعیت پرداخت را بررسی کنیم.<br/>لطفاً با پشتیبانی تماس بگیرید.</p>
+      <p style="font-size:12px;color:var(--muted)" dir="ltr">کد پیگیری: ${trackId}</p>
+      <a href="index.html" class="btn">بازگشت</a>`);
+  }
+}
+verify();
+</script>
+</body>
+</html>
