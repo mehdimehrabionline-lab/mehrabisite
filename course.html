@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-FKY77DD6ZV"></script><script>
+function faNum(n){ return String(n).replace(/[0-9]/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]); }window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag("js",new Date());gtag("config","G-FKY77DD6ZV");</script>
+
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title id="pageTitle">دوره آموزشی | مهدی محرابی</title>
+<meta name="description" id="pageDesc" content="آکادمی هوش مصنوعی و تولید محتوای مهدی محرابی"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,500&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,500&display=swap"></noscript>
+<script>
+/* کتابخانه‌ی Supabase دیگه نمایش صفحه رو نگه نمی‌داره: بعد از نمایش صفحه و فقط به‌عنوان پشتیبان لود می‌شه */
+window.__sbReady = new Promise(function(resolve){
+  function add(src, ok){
+    var s = document.createElement('script');
+    s.src = src; s.onload = ok; s.onerror = function(){ resolve(false); };
+    document.head.appendChild(s);
+  }
+  function go(){
+    add('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2', function(){
+      add('/supabase-config.js', function(){ resolve(typeof sb !== 'undefined'); });
+    });
+  }
+  if (document.readyState === 'complete') go(); else window.addEventListener('load', go);
+});
+</script>
+<style>
+:root{--bg:#0c0b09;--bg-2:#15130f;--bg-3:#1d1a15;--ink:#f4f1ea;--ink-2:#d8d3c8;--muted:#8f897e;--line:rgba(244,241,234,.12);--line-2:rgba(244,241,234,.20);--accent:#c98a5a;--accent-2:#a85a32;--serif:'Fraunces','Vazirmatn',serif;--sans:'Vazirmatn',system-ui,sans-serif;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--sans);background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
+.nav{position:sticky;top:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:18px 40px;background:rgba(12,11,9,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.nav .brand{font-family:var(--serif);font-style:italic;font-size:20px;color:var(--ink);text-decoration:none}
+.nav .brand b{font-style:normal;font-weight:500}
+.nav ul{display:flex;gap:22px;list-style:none;align-items:center}
+.nav a{color:var(--muted);text-decoration:none;font-size:13px;transition:color .2s}
+.nav a:hover{color:var(--ink)}
+.lang-toggle{background:transparent;border:1px solid var(--line-2);color:var(--ink);padding:5px 12px;border-radius:20px;font-family:var(--sans);font-size:12px;cursor:pointer}
+
+/* Hero cover */
+.course-hero{position:relative;min-height:360px;display:flex;align-items:flex-end;overflow:hidden;background:linear-gradient(135deg,#1a1410,#0a0a0a)}
+.course-hero-bg{position:absolute;inset:0;object-fit:cover;width:100%;height:100%;opacity:.4}
+.course-hero-overlay{position:absolute;inset:0;background:linear-gradient(0deg,rgba(12,11,9,.95) 0%,rgba(12,11,9,.4) 60%,transparent 100%)}
+.course-hero-content{position:relative;z-index:2;max-width:900px;margin:0 auto;width:100%;padding:48px 40px}
+.course-hero-tag{font-size:10px;letter-spacing:3px;color:var(--accent);border:1px solid var(--line-2);padding:4px 14px;border-radius:20px;display:inline-block;margin-bottom:16px}
+.course-hero h1{font-family:var(--serif);font-weight:300;font-size:clamp(28px,5vw,52px);line-height:1.15;margin-bottom:16px;letter-spacing:-.02em}
+.course-meta-row{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:28px}
+.cmeta{font-size:13px;color:var(--muted);background:rgba(244,241,234,.07);padding:6px 14px;border-radius:20px;border:1px solid var(--line)}
+/* خریدار دوره: هیچ قیمت، تخفیف یا جشنواره‌ای نمایش داده نمی‌شه */
+body.owned #heroPriceWrap, body.owned #heroDiscountBadge, body.owned #sidebarDiscountBanner, body.owned #sidebarPriceWrap, body.owned .sales-only{display:none !important}
+.course-hero-price{font-family:var(--serif);font-size:28px;color:var(--accent);margin-bottom:24px}
+.enroll-btn{display:inline-flex;align-items:center;gap:10px;background:var(--accent);color:#0a0a0a;padding:14px 32px;border-radius:4px;font-family:var(--sans);font-size:14px;font-weight:600;text-decoration:none;letter-spacing:1px;transition:background .3s}
+.enroll-btn:hover{background:var(--accent-2);color:#fff}
+
+/* Body */
+.course-body{max-width:900px;margin:0 auto;padding:60px 40px 80px;display:grid;grid-template-columns:1fr 340px;gap:48px;align-items:start}
+.course-main{}
+.course-video{margin-bottom:40px;border-radius:8px;overflow:hidden}
+.course-video iframe{width:100%;aspect-ratio:16/9;border:none;display:block}
+.vpn-notice{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:6px;font-size:12px;margin-top:8px}
+.vpn-notice.off{background:rgba(26,107,212,.12);border:1px solid rgba(26,107,212,.3);color:#6ab0ff}
+.course-description{font-size:16px;line-height:2;color:var(--ink-2);margin-bottom:40px}
+.course-description h2{font-family:var(--serif);font-weight:400;font-size:24px;color:var(--ink);margin:32px 0 12px}
+.course-description p{margin-bottom:16px}
+
+/* Syllabus */
+.syllabus-section h2{font-family:var(--serif);font-weight:400;font-size:26px;margin-bottom:24px}
+.syllabus-list{list-style:none;display:flex;flex-direction:column;gap:10px}
+.syllabus-list li{display:flex;align-items:flex-start;gap:12px;padding:14px 16px;background:var(--bg-2);border:1px solid var(--line);border-radius:6px;font-size:14px;line-height:1.7}
+.syllabus-list li::before{content:"✓";color:var(--accent);font-weight:600;flex-shrink:0;margin-top:2px}
+
+/* Sidebar */
+.course-sidebar{position:sticky;top:90px}
+.sidebar-card{background:var(--bg-2);border:1px solid var(--line);border-radius:8px;padding:28px;margin-bottom:20px}
+.sidebar-card h3{font-family:var(--serif);font-weight:400;font-size:20px;margin-bottom:16px}
+.sidebar-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--line);font-size:13px}
+.sidebar-row:last-child{border:none}
+.sidebar-row .label{color:var(--muted)}
+.sidebar-row .val{font-weight:500}
+.sidebar-price{font-family:var(--serif);font-size:26px;color:var(--accent);text-align:center;margin:16px 0}
+#sidebarOriginalPrice{font-size:14px;color:var(--muted);text-decoration:line-through;text-align:center;margin-top:12px}
+.discount-banner{background:linear-gradient(135deg,#e0455a,#c9285a);color:#fff;border-radius:8px;padding:12px 16px;margin:14px 0;text-align:center;box-shadow:0 4px 16px rgba(224,69,90,.35);animation:pulseDiscount 2.4s ease-in-out infinite}
+.discount-banner .db-title{font-size:13px;font-weight:700;margin-bottom:2px}
+.discount-banner .db-sub{font-size:11px;opacity:.9}
+@keyframes pulseDiscount{0%,100%{transform:scale(1)}50%{transform:scale(1.02)}}
+.hero-discount-badge{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,#e0455a,#c9285a);color:#fff;font-size:12px;font-weight:700;padding:6px 16px;border-radius:20px;margin-bottom:14px;box-shadow:0 4px 14px rgba(224,69,90,.4)}
+#heroOriginalPrice{font-size:16px;color:var(--muted);text-decoration:line-through;margin-top:2px}
+.sidebar-enroll{display:block;width:100%;background:var(--accent);color:#0a0a0a;padding:14px;border-radius:4px;font-family:var(--sans);font-size:14px;font-weight:600;text-decoration:none;text-align:center;letter-spacing:1px;transition:background .3s;border:none;cursor:pointer}
+.sidebar-enroll:hover{background:var(--accent-2);color:#fff}
+.sidebar-contact{text-align:center;margin-top:14px;font-size:12px;color:var(--muted)}
+.sidebar-contact a{color:var(--accent);text-decoration:none}
+
+/* Loading */
+.page-loading{max-width:600px;margin:100px auto;text-align:center;color:var(--muted);font-family:var(--serif);font-style:italic;font-size:18px}
+.spinner{width:32px;height:32px;border:2px solid var(--line);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 20px}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Back btn */
+.back-btn{display:inline-flex;align-items:center;gap:8px;color:var(--muted);font-size:13px;text-decoration:none;margin-bottom:32px;transition:color .2s}
+.back-btn:hover{color:var(--accent)}
+
+footer{background:#080807;border-top:1px solid var(--line);padding:24px 40px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+footer .copy{font-size:12px;color:var(--muted)}
+footer .links a{font-size:12px;color:var(--muted);text-decoration:none;margin-right:16px}
+
+@media(max-width:768px){
+  .nav{padding:16px 20px}
+  .course-hero-content{padding:36px 20px}
+  .course-body{grid-template-columns:1fr;padding:36px 20px 60px}
+  .course-sidebar{position:static}
+  footer{padding:20px}
+}
+</style>
+<link rel="icon" type="image/jpeg" href="/assets/portrait.jpg"/>
+<link rel="canonical" id="canonicalLink" href="https://mehdimehrabi.ir/course.html"/>
+<script type="application/ld+json" id="courseSchema"></script>
+</head>
+<body>
+<header class="nav">
+  <a href="/" class="brand">Mehdi <b>Mehrabi</b></a>
+  <ul>
+    <li><a href="/#courses">دوره‌ها</a></li>
+    <li><a href="/blog">بلاگ</a></li>
+    <li><a href="/#contact">تماس</a></li>
+    <li><button id="langToggle" class="lang-toggle">EN</button></li>
+  </ul>
+</header>
+
+<div id="pageLoading" class="page-loading"><div class="spinner"></div>در حال بارگذاری…</div>
+<div id="pageMain" style="display:none">
+
+  <div class="course-hero" id="courseHero">
+    <img id="heroBg" class="course-hero-bg" style="display:none"/>
+    <div class="course-hero-overlay"></div>
+    <div class="course-hero-content">
+      <a href="/#courses" class="back-btn" id="backBtn">← بازگشت به دوره‌ها</a>
+      <div id="heroDiscountBadge" style="display:none"></div>
+      <div class="course-hero-tag" id="heroTag"></div>
+      <h1 id="heroTitle"></h1>
+      <div class="course-meta-row" id="heroMeta"></div>
+      <div id="heroPriceWrap">
+        <div class="course-hero-price" id="heroPrice"></div>
+        <div id="heroOriginalPrice" style="display:none"></div>
+      </div>
+      <button id="heroEnroll" class="enroll-btn" onclick="showPurchaseInfo();document.querySelector('.course-sidebar').scrollIntoView({behavior:'smooth'})">💳 خرید این دوره</button>
+    </div>
+  </div>
+
+  <div class="course-body">
+    <div class="course-main">
+      <div class="course-video" id="courseVideo" style="display:none"></div>
+      <div class="course-description" id="courseDesc"></div>
+      <div class="syllabus-section" id="syllabusSection" style="display:none">
+        <h2 id="syllabusTitle">سرفصل‌های دوره</h2>
+        <ul class="syllabus-list" id="syllabusList"></ul>
+      </div>
+    </div>
+
+    <aside class="course-sidebar">
+      <div class="sidebar-card">
+        <h3 id="sidebarTitle">اطلاعات دوره</h3>
+        <div id="sidebarRows"></div>
+        <div id="sidebarDiscountBanner" style="display:none"></div>
+        <div style="text-align:center" id="sidebarPriceWrap">
+          <div id="sidebarOriginalPrice" style="display:none"></div>
+          <div class="sidebar-price" id="sidebarPrice"></div>
+        </div>
+
+        <!-- دکمه خرید -->
+        <div id="buySection">
+          <button class="sidebar-enroll" id="buyBtn" onclick="showPurchaseInfo()">💳 خرید و پرداخت آنلاین</button>
+          <p style="font-size:11px;color:var(--muted);text-align:center;margin-top:10px;line-height:1.7">
+            پرداخت امن از طریق درگاه زیبال<br/>دسترسی فوری بعد از پرداخت
+          </p>
+        </div>
+
+
+      </div>
+    </aside>
+  </div>
+</div>
+
+<div id="pageError" style="display:none;max-width:500px;margin:100px auto;text-align:center;color:var(--muted);font-family:var(--serif);font-style:italic;font-size:18px">دوره پیدا نشد.</div>
+
+<div style="text-align:center;padding:20px 0"><a referrerpolicy="origin" target="_blank" href="https://trustseal.enamad.ir/?id=7437957&Code=jLmdD0lCLV7eeJKo1o59E3HJZKipaqOj"><img referrerpolicy="origin" src="https://trustseal.enamad.ir/logo.aspx?id=7437957&Code=jLmdD0lCLV7eeJKo1o59E3HJZKipaqOj" alt="نماد اعتماد" style="cursor:pointer;max-width:100px;background:#fff;border-radius:6px;padding:6px" code="jLmdD0lCLV7eeJKo1o59E3HJZKipaqOj"></a></div><footer>
+  <div class="copy">© ۱۴۰۴ آکادمی هوش مصنوعی مهدی محرابی</div>
+  <div class="links">
+    <a href="https://instagram.com/Filmehdy" target="_blank">Instagram</a>
+    <a href="https://wa.me/989170073010" target="_blank">WhatsApp</a>
+  </div>
+</footer>
+
+<script>
+let currentLang = localStorage.getItem('mm_lang')||'fa';
+document.getElementById('langToggle').textContent = currentLang==='fa'?'EN':'فا';
+document.getElementById('langToggle').addEventListener('click',()=>{
+  currentLang = currentLang==='fa'?'en':'fa';
+  localStorage.setItem('mm_lang',currentLang);
+  location.reload();
+});
+document.documentElement.lang=currentLang;
+document.documentElement.dir=currentLang==='fa'?'rtl':'ltr';
+
+const params = new URLSearchParams(location.search);
+// slug را هم از query string و هم از مسیر /c/xxx می‌خوانیم
+let slug = params.get('slug');
+if (!slug) {
+  const pathMatch = location.pathname.match(/\/c\/([A-Za-z0-9_-]+)/);
+  if (pathMatch) slug = pathMatch[1];
+}
+const id = params.get('id');
+let courseId = id; // برای استفاده در خرید و دسترسی
+
+/* اول از کش محلی همین هاست (سریع)؛ اگه دوره اونجا نبود (مثلاً غیرفعال) مستقیم از دیتابیس */
+async function fetchCourse(){
+  try {
+    const r = await fetch('/api/cache.php?type=course_full');
+    const list = await r.json();
+    if (Array.isArray(list)) {
+      const c = list.find(x => slug ? x.slug === slug : x.id === id);
+      if (c) return c;
+    }
+  } catch(e) {}
+  try {
+    await window.__sbReady;
+    const query = slug
+      ? sb.from('courses').select('*').eq('slug', slug).single()
+      : sb.from('courses').select('*').eq('id', id).single();
+    const {data,error} = await query;
+    if(error){ console.error('MM: Supabase error:', error.message, error.code, error.details); }
+    return (error||!data) ? null : data;
+  } catch(e) { return null; }
+}
+
+async function load(){
+  if(!id && !slug){ console.error('MM: no id or slug'); showError(); return; }
+  console.log('MM: loading course by', slug ? 'slug='+slug : 'id='+id);
+  const data = await fetchCourse();
+  if(!data){ showError(); return; }
+  console.log('MM: course loaded:', data.title);
+  courseId = data.id;
+
+  const EN = currentLang==='en';
+  const pick = f => (EN&&data[f+'_en'])?data[f+'_en']:data[f];
+
+  const title = pick('title')||'';
+  document.title = title+' | مهدی محرابی';
+  document.getElementById('pageTitle').textContent = document.title;
+  // canonical — همیشه به آدرس تمیز اشاره می‌کند
+  const canon = document.getElementById('canonicalLink');
+  const pageUrl = data.slug
+    ? 'https://mehdimehrabi.ir/c/' + data.slug
+    : 'https://mehdimehrabi.ir/course.html?id=' + data.id;
+  if (canon) canon.href = pageUrl;
+
+  // ── داده ساختاریافته برای گوگل ──
+  try {
+    const schema = {
+      "@context": "https://schema.org",
+      "@type": "Course",
+      "name": title,
+      "description": (pick('description')||'').substring(0, 300),
+      "url": pageUrl,
+      "provider": {
+        "@type": "EducationalOrganization",
+        "name": "آکادمی هوش مصنوعی مهدی محرابی",
+        "url": "https://mehdimehrabi.ir",
+        "sameAs": ["https://instagram.com/Filmehdy"]
+      },
+      "inLanguage": "fa-IR",
+      "teaches": pick('title') || '',
+      "hasCourseInstance": {
+        "@type": "CourseInstance",
+        "courseMode": (data.mode && data.mode.includes('آنلاین')) ? "online" : "blended",
+        "courseWorkload": data.duration || undefined,
+        "location": {
+          "@type": "Place",
+          "name": "شیراز، ایران",
+          "address": { "@type": "PostalAddress", "addressLocality": "شیراز", "addressCountry": "IR" }
+        },
+        "instructor": { "@type": "Person", "name": "مهدی محرابی", "url": "https://mehdimehrabi.ir" }
+      }
+    };
+    if (data.cover_url) schema.image = data.cover_url;
+    if (data.price_amount && data.price_amount >= 1000) {
+      schema.offers = {
+        "@type": "Offer",
+        "price": String(data.price_amount),
+        "priceCurrency": "IRT",
+        "availability": "https://schema.org/InStock",
+        "url": pageUrl
+      };
+    }
+    const el = document.getElementById('courseSchema');
+    if (el) el.textContent = JSON.stringify(schema);
+  } catch(e){}
+  document.getElementById('pageDesc').content = pick('excerpt')||pick('description')||'';
+
+  // Hero
+  if(data.cover_url){
+    const bg=document.getElementById('heroBg');
+    bg.src=data.cover_url; bg.style.display='block';
+  }
+  document.getElementById('heroTag').textContent = pick('tag')||'آموزش';
+  document.getElementById('heroTitle').textContent = title;
+
+  const metaItems = [
+    data.level && `<span class="cmeta">📊 ${pick('level')||data.level}</span>`,
+    data.mode && `<span class="cmeta">📍 ${pick('mode')||data.mode}</span>`,
+    data.duration && `<span class="cmeta">⏱ ${pick('duration')||data.duration}</span>`,
+    data.capacity && `<span class="cmeta sales-only">👥 ${EN?'Capacity':'ظرفیت'}: ${EN?data.capacity:faNum(data.capacity)}</span>`,
+    data.start_date && `<span class="cmeta">📅 ${EN?'Starts':'شروع'}: ${data.start_date}</span>`,
+  ].filter(Boolean).join('');
+  document.getElementById('heroMeta').innerHTML = metaItems;
+
+  const price = pick('price')||data.price;
+  window.__coursePriceAmount = parseInt(data.price_amount) || 0;
+  if(price) document.getElementById('heroPrice').textContent = price;
+
+  // تخفیف
+  if(data.discount_active && data.original_price_amount){
+    const label = pick('discount_label') || data.discount_label || (EN?'Special Offer':'جشنواره ویژه');
+    const pct = data.discount_percent ? `${faNum(data.discount_percent)}٪ تخفیف` : '';
+    const origFormatted = Number(data.original_price_amount).toLocaleString(EN?'en-US':'fa-IR') + (EN?' Toman':' تومان');
+
+    document.getElementById('heroDiscountBadge').style.display='inline-flex';
+    document.getElementById('heroDiscountBadge').className='hero-discount-badge';
+    document.getElementById('heroDiscountBadge').innerHTML = `🔥 ${label}${pct?' — '+pct:''}`;
+    document.getElementById('heroOriginalPrice').style.display='block';
+    document.getElementById('heroOriginalPrice').textContent = origFormatted;
+
+    document.getElementById('sidebarDiscountBanner').style.display='block';
+    document.getElementById('sidebarDiscountBanner').className='discount-banner';
+    document.getElementById('sidebarDiscountBanner').innerHTML = `<div class="db-title">🔥 ${label}</div><div class="db-sub">${pct||(EN?'Limited time':'زمان محدود')}</div>`;
+    document.getElementById('sidebarOriginalPrice').style.display='block';
+    document.getElementById('sidebarOriginalPrice').textContent = origFormatted;
+  }
+
+  // Sidebar
+  document.getElementById('sidebarTitle').textContent = EN?'Course Info':'اطلاعات دوره';
+  const rows = [
+    data.level && [EN?'Level':'سطح', pick('level')||data.level],
+    data.mode && [EN?'Mode':'نوع', pick('mode')||data.mode],
+    data.duration && [EN?'Duration':'مدت', pick('duration')||data.duration],
+    data.capacity && [EN?'Capacity':'ظرفیت', (EN?data.capacity:faNum(data.capacity))+(EN?' students':' نفر'), 'sales-only'],
+    data.start_date && [EN?'Starts':'شروع', data.start_date],
+  ].filter(Boolean);
+  document.getElementById('sidebarRows').innerHTML = rows.map(([l,v,cls])=>`<div class="sidebar-row ${cls||''}"><span class="label">${l}</span><span class="val">${v}</span></div>`).join('');
+  if(price) document.getElementById('sidebarPrice').textContent = price;
+
+  // Video — اولویت با ویدیوی خودآپلودشده، بعد لینک آپارات/یوتیوب
+  if(data.intro_video_file){
+    const vd=document.getElementById('courseVideo');
+    vd.style.display='block';
+    vd.innerHTML=`<video src="assets/intro/${data.intro_video_file}" controls playsinline preload="metadata" style="width:100%;height:100%;border-radius:inherit;background:#000"></video>`;
+  } else if(data.video_url){
+    const vd=document.getElementById('courseVideo');
+    vd.style.display='block';
+    const url=data.video_url;
+    let embed='', notice='';
+    if(url.includes('aparat.com')){
+      const m=url.match(/aparat\.com\/v\/([a-zA-Z0-9]+)/i)||url.match(/aparat\.com\/([a-zA-Z0-9]{5,})/i);
+      if(m){ embed=`<iframe src="https://www.aparat.com/video/video/embed/videohash/${m[1]}/vt/frame" allowfullscreen></iframe>`; notice=`<div class="vpn-notice off">🔵 ${EN?'Turn OFF your VPN to watch this video.':'برای دیدن این ویدیو فیلترشکن را خاموش کنید.'}</div>`; }
+    } else if(url.includes('youtube.com')||url.includes('youtu.be')){
+      const m=url.match(/[?&]v=([a-zA-Z0-9_-]+)/)||url.match(/youtu\.be\/([a-zA-Z0-9_-]+)/);
+      if(m) embed=`<iframe src="https://www.youtube.com/embed/${m[1]}?autoplay=0" allowfullscreen></iframe>`;
+    }
+    vd.innerHTML=embed+notice;
+  }
+
+  // Description
+  const desc = pick('description')||'';
+  if(desc) document.getElementById('courseDesc').innerHTML = desc.includes('<')?desc:`<p>${desc.replace(/\n\n/g,'</p><p>').replace(/\n/g,'<br/>')}</p>`;
+
+  // Syllabus
+  const syl = pick('syllabus')||data.syllabus;
+  if(syl){
+    const lines = syl.split('\n').map(l=>l.trim()).filter(Boolean);
+    if(lines.length){
+      document.getElementById('syllabusSection').style.display='block';
+      document.getElementById('syllabusTitle').textContent = EN?'Course Syllabus':'سرفصل‌های دوره';
+      document.getElementById('syllabusList').innerHTML = lines.map(l=>`<li>${l}</li>`).join('');
+    }
+  }
+
+  if (ownedFromCache()) showOwnedUI();
+  document.getElementById('pageLoading').style.display='none';
+  document.getElementById('pageMain').style.display='block';
+}
+
+async function showPurchaseInfo(){
+  // اگر قیمت تنظیم نشده، همان اول پیام مناسب بده
+  if (!window.__coursePriceAmount || window.__coursePriceAmount < 1000){
+    alert('این دوره در حال آپدیته و به‌زودی برای خرید در دسترس قرار می‌گیره 🙏');
+    return;
+  }
+  const stored = localStorage.getItem('mm_user');
+  if(!stored){
+    if(confirm('برای خرید دوره باید وارد حساب کاربری بشی.\n\nالان بریم به صفحه ورود؟')){
+      localStorage.setItem('mm_redirect', location.href);
+      location.href = '/register.html';
+    }
+    return;
+  }
+  const u = JSON.parse(stored);
+  if(!u.full_name || !u.email){
+    if(confirm('برای خرید باید پروفایلت رو کامل کنی (نام و ایمیل).\n\nالان بریم به پروفایل؟')){
+      location.href = '/dashboard.html';
+    }
+    return;
+  }
+  if(!u.phone || !/^09\d{9}$/.test(u.phone)){
+    if(confirm('برای خرید باید شماره موبایلت رو تکمیل کنی.\n\nالان بریم به پروفایل؟')){
+      location.href = '/dashboard.html';
+    }
+    return;
+  }
+
+  const btn = document.getElementById('buyBtn');
+  const original = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = 'در حال اتصال به درگاه…';
+
+  try {
+    const r = await fetch(`/pay.php?p=${encodeURIComponent(u.phone)}&c=${encodeURIComponent(courseId)}`);
+    const d = await r.json();
+
+    if (d.ok && d.redirect) {
+      location.href = d.redirect;
+      return;
+    }
+
+    btn.disabled = false;
+    btn.textContent = original;
+
+    if (d.already_owned) {
+      if(confirm('شما قبلاً این دوره رو خریدی!\n\nبریم به پنل کاربری؟')) location.href = '/dashboard.html';
+      return;
+    }
+    if (d.need_profile) {
+      if(confirm(d.error + '\n\nالان بریم؟')) location.href = '/dashboard.html';
+      return;
+    }
+    if (d.error && d.error.includes('شماره موبایل')) {
+      if(confirm('برای خرید باید شماره موبایلت رو تکمیل کنی.\n\nالان بریم به پروفایل؟')) location.href = '/dashboard.html';
+      return;
+    }
+    if (d.error && (d.error.includes('قیمت') || d.error.includes('تنظیم نشده'))) {
+      alert('این دوره در حال آپدیته و به‌زودی برای خرید در دسترس قرار می‌گیره 🙏');
+      return;
+    }
+    alert(d.error || 'خطا در اتصال به درگاه. لطفاً با پشتیبانی تماس بگیرید: ۰۹۱۷۰۰۷۳۰۱۰');
+  } catch(e) {
+    btn.disabled = false;
+    btn.textContent = original;
+    alert('خطا در ارتباط با سرور. لطفاً دوباره تلاش کنید.');
+  }
+}
+
+async function loadSettings(){
+  try {
+    await window.__sbReady;
+    const {data} = await sb.from('site_content').select('key,value').in('key',['phone']);
+    if(!data) return;
+    const s = {};
+    data.forEach(r=>s[r.key]=r.value);
+
+  } catch {}
+}
+
+function showError(){ document.getElementById('pageLoading').style.display='none'; document.getElementById('pageError').style.display='block'; }
+
+/* ── خریدار دوره ──
+   کسی که این دوره رو خریده فقط دکمه‌ی «مشاهده ویدیوها» رو می‌بینه؛ قیمت، تخفیف و جشنواره پنهانه. */
+function showOwnedUI(){
+  document.body.classList.add('owned');
+  const sec = document.getElementById('buySection');
+  if (sec) sec.innerHTML = `
+    <a href="/watch.html?course=${courseId}" class="sidebar-enroll" style="display:block;text-decoration:none;text-align:center;background:#7ec77e">▶ مشاهده ویدیوها</a>
+    <p style="font-size:11px;color:#7ec77e;text-align:center;margin-top:10px">✓ شما این دوره را خریداری کرده‌اید</p>`;
+  const hero = document.getElementById('heroEnroll');
+  if (hero) {
+    hero.textContent = '▶ مشاهده ویدیوها';
+    hero.onclick = () => { location.href = '/watch.html?course=' + courseId; };
+  }
+}
+
+// آخرین لیست دوره‌های خریداری‌شده‌ی همین کاربر که داشبورد روی دستگاه ذخیره کرده (برای تشخیص فوری، بدون معطلی)
+function ownedFromCache(){
+  try {
+    const u = JSON.parse(localStorage.getItem('mm_user') || 'null');
+    if (!u || !u.phone) return false;
+    const c = JSON.parse(localStorage.getItem('mm_courses_v1_' + u.phone) || 'null');
+    return !!(c && Array.isArray(c.courses) && c.courses.some(x => x.id === courseId));
+  } catch(e) { return false; }
+}
+
+// تأیید نهایی از سرور
+async function checkAccess(){
+  const stored = localStorage.getItem('mm_user');
+  if (!stored) return;
+  let u; try { u = JSON.parse(stored); } catch(e) { return; }
+  if (!u || !u.phone) return;
+  try {
+    const r = await fetch(`/mycourses.php?p=${encodeURIComponent(u.phone)}`);
+    const d = await r.json();
+    if (!d.ok) return;
+    const owns = (d.courses || []).some(c => c.id === courseId);
+    try { localStorage.setItem('mm_courses_v1_' + u.phone, JSON.stringify({ courses: d.courses || [], t: Date.now() })); } catch(e){}
+    if (owns) {
+      showOwnedUI();
+    } else if (document.body.classList.contains('owned') && !sessionStorage.getItem('mm_owned_reload')) {
+      // دسترسی برداشته شده بود ولی لیست ذخیره‌شده قدیمی بود → یک بار صفحه رو دوباره بساز
+      sessionStorage.setItem('mm_owned_reload', '1');
+      location.reload();
+    }
+  } catch {}
+}
+
+loadSettings();
+load().then(() => checkAccess());
+</script>
+</body>
+</html>
