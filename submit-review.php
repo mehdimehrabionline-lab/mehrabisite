@@ -16,20 +16,18 @@ function out($a, $c = 200) { http_response_code($c); echo json_encode($a, JSON_U
 $body = json_decode(file_get_contents('php://input'), true);
 if (!$body) out(['ok'=>false,'error'=>'داده نامعتبر'], 400);
 
-$phone = isset($body['phone']) ? trim($body['phone']) : '';
+$token = isset($body['token']) ? trim($body['token']) : '';
 $courseId = isset($body['course_id']) ? trim($body['course_id']) : '';
 $content = isset($body['content']) ? trim($body['content']) : '';
 $rating = isset($body['rating']) ? (int)$body['rating'] : 5;
 
-if (!preg_match('/^09[0-9]{9}$/', $phone)) out(['ok'=>false,'error'=>'دسترسی نامعتبر'], 403);
+// به‌جای اعتماد صرف به شماره موبایل، نشست ورود رو تأیید می‌کنیم
+$user = sb_require_session($token);
+if (!$user) out(['ok'=>false,'error'=>'نشست نامعتبر یا منقضی‌شده، لطفاً دوباره وارد شو'], 401);
+$phone = isset($user['phone']) ? $user['phone'] : '';
 if ($courseId === '') out(['ok'=>false,'error'=>'دوره مشخص نشده'], 400);
 if (mb_strlen($content) < 10) out(['ok'=>false,'error'=>'نظرت رو کمی کامل‌تر بنویس'], 400);
 if ($rating < 1 || $rating > 5) $rating = 5;
-
-// کاربر
-$u = sb_request('academy_users?phone=eq.'.rawurlencode($phone).'&select=id,full_name');
-$user = isset($u['data'][0]) ? $u['data'][0] : null;
-if (!$user) out(['ok'=>false,'error'=>'کاربر یافت نشد'], 403);
 
 // بررسی این‌که واقعاً این دوره رو خریده
 $acc = sb_request('course_access?user_id=eq.'.rawurlencode($user['id']).'&course_id=eq.'.rawurlencode($courseId).'&is_active=eq.true&select=id');

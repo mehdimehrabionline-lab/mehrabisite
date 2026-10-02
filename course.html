@@ -397,7 +397,7 @@ async function showPurchaseInfo(){
     return;
   }
   const stored = localStorage.getItem('mm_user');
-  if(!stored){
+  if(!stored || !localStorage.getItem('mm_session')){
     if(confirm('برای خرید دوره باید وارد حساب کاربری بشی.\n\nالان بریم به صفحه ورود؟')){
       localStorage.setItem('mm_redirect', location.href);
       location.href = '/register.html';
@@ -424,7 +424,7 @@ async function showPurchaseInfo(){
   btn.textContent = 'در حال اتصال به درگاه…';
 
   try {
-    const r = await fetch(`/pay.php?p=${encodeURIComponent(u.phone)}&c=${encodeURIComponent(courseId)}`);
+    const r = await fetch(`/pay.php?t=${encodeURIComponent(localStorage.getItem('mm_session') || '')}&c=${encodeURIComponent(courseId)}`);
     const d = await r.json();
 
     if (d.ok && d.redirect) {
@@ -503,8 +503,11 @@ async function checkAccess(){
   if (!stored) return;
   let u; try { u = JSON.parse(stored); } catch(e) { return; }
   if (!u || !u.phone) return;
+  const sess = localStorage.getItem('mm_session');
+  if (!sess) return;
   try {
-    const r = await fetch(`/mycourses.php?p=${encodeURIComponent(u.phone)}`);
+    const r = await fetch(`/mycourses.php?t=${encodeURIComponent(sess)}`);
+    if (r.status === 401) { localStorage.removeItem('mm_session'); localStorage.removeItem('mm_user'); return; }
     const d = await r.json();
     if (!d.ok) return;
     const owns = (d.courses || []).some(c => c.id === courseId);

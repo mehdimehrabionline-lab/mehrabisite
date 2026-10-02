@@ -241,6 +241,14 @@ footer a{color:var(--accent);text-decoration:none}
 <script>
 const FN = 'https://rknsiuyfhxnmhnfesfhh.supabase.co/functions/v1';
 let user = null;
+const SESSION = () => localStorage.getItem('mm_session') || '';
+// نشست منقضی/باطل شده (یا دستگاه سوم وارد شده) ← پاک کن و به صفحه ورود برگرد
+function forceRelogin(){
+  try { localStorage.removeItem(cacheKey()); } catch(e){}
+  localStorage.removeItem('mm_user');
+  localStorage.removeItem('mm_session');
+  location.href = 'register.html';
+}
 
 let paidCourses = [], legacyOrders = [];
 let coursesDone = false, ordersDone = false, coursesFailed = false, ordersPhone = null;
@@ -248,7 +256,7 @@ const cacheKey = () => 'mm_courses_v1_' + ((user && user.phone) || '');
 
 async function init(){
   const stored = localStorage.getItem('mm_user');
-  if (!stored){ location.href = 'register.html'; return; }
+  if (!stored || !SESSION()){ localStorage.removeItem('mm_user'); localStorage.removeItem('mm_session'); location.href = 'register.html'; return; }
   try { user = JSON.parse(stored); }
   catch(e){ localStorage.removeItem('mm_user'); location.href = 'register.html'; return; }
 
@@ -265,8 +273,9 @@ async function refreshProfile(){
   try {
     const r = await fetch(`${FN}/user-auth`, {
       method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ action:'get_profile', phone: user.phone }),
+      body: JSON.stringify({ action:'get_profile', token: SESSION() }),
     });
+    if (r.status === 401){ forceRelogin(); return; }
     const d = await r.json();
     if (d.ok && d.user){
       user = d.user;
@@ -380,11 +389,11 @@ async function loadOrders(){
   } catch(e){}
 
   // ۲) دوره‌های آنلاین و سفارش‌های قدیمی کارت‌به‌کارت هم‌زمان گرفته می‌شن (نه پشت‌سرهم)
-  const coursesP = fetch(`mycourses.php?p=${encodeURIComponent(phone)}`).then(r => r.json());
+  const coursesP = fetch(`mycourses.php?t=${encodeURIComponent(SESSION())}`).then(r => { if (r.status === 401){ forceRelogin(); throw new Error('unauth'); } return r.json(); });
   const ordersP = fetch(`${FN}/user-auth`, {
     method:'POST', headers:{'Content-Type':'application/json'},
-    body: JSON.stringify({ action:'get_orders', phone }),
-  }).then(r => r.json());
+    body: JSON.stringify({ action:'get_orders', token: SESSION() }),
+  }).then(r => { if (r.status === 401){ forceRelogin(); throw new Error('unauth'); } return r.json(); });
 
   coursesP.then(pd => {
     if (phone !== ordersPhone) return;                    // جواب یک درخواست قدیمی
@@ -451,7 +460,7 @@ async function saveProfile(){
     const r = await fetch(`${FN}/user-auth`, {
       method:'POST', headers:{'Content-Type':'application/json'},
       body: JSON.stringify({
-        action:'update_profile', phone: user.phone,
+        action:'update_profile', token: SESSION(),
         full_name:name, email,
         age: parseInt(document.getElementById('p-age').value)||null,
         job: document.getElementById('p-job').value.trim()||null,
@@ -459,6 +468,7 @@ async function saveProfile(){
         how_found: document.getElementById('p-how').value||null,
       }),
     });
+    if (r.status === 401){ forceRelogin(); return; }
     const d = await r.json();
     btn.disabled = false; btn.textContent = 'ذخیره اطلاعات';
     if (d.ok){
@@ -521,8 +531,9 @@ async function submitReview(){
   try {
     const r = await fetch('submit-review.php', {
       method: 'POST', headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({ phone: user.phone, course_id: courseId, content, rating: selectedRating }),
+      body: JSON.stringify({ token: SESSION(), course_id: courseId, content, rating: selectedRating }),
     });
+    if (r.status === 401){ forceRelogin(); return; }
     const d = await r.json();
     btn.disabled = false; btn.textContent = 'ثبت نظر';
     if (d.ok) {
@@ -538,8 +549,12 @@ async function submitReview(){
 }
 
 function logout(){
+  // نشست رو روی سرور هم باطل کن (بی‌صدا؛ اگه خطا خورد مهم نیست)
+  const tk = SESSION();
+  if (tk) { try { fetch(`${FN}/user-auth`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ action:'logout', token: tk }), keepalive:true }); } catch(e){} }
   try { localStorage.removeItem(cacheKey()); } catch(e){}
   localStorage.removeItem('mm_user');
+  localStorage.removeItem('mm_session');
   localStorage.removeItem('mm_token');
   location.href = '/';
 }

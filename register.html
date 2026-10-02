@@ -149,7 +149,13 @@ const GOOGLE_CLIENT_ID = '651019426684-odq3v48g8u5rkkoiicf7h3oboj302cm5.apps.goo
 let currentPhone = '';
 let timerInterval = null;
 
-if (localStorage.getItem('mm_user')) location.href = 'dashboard.html';
+// فقط اگه نشست معتبر (توکن) داشته باشه مستقیم می‌ره داشبورد؛ کاربران قدیمی بدون توکن باید دوباره وارد شن
+if (localStorage.getItem('mm_user') && localStorage.getItem('mm_session')) location.href = 'dashboard.html';
+else { localStorage.removeItem('mm_user'); localStorage.removeItem('mm_session'); }
+function saveLogin(d){
+  localStorage.setItem('mm_user', JSON.stringify(d.user));
+  if (d.session && d.session.token) localStorage.setItem('mm_session', d.session.token);
+}
 
 function hideAll(){
   ['m-otp','m-password','m-code','m-reset','m-reset-code'].forEach(id => {
@@ -222,7 +228,7 @@ async function verifyCode(){
     const d = await r.json();
     btn.disabled = false; btn.textContent = 'ورود';
     if (d.ok){
-      localStorage.setItem('mm_user', JSON.stringify(d.user));
+      saveLogin(d);
       showMsg('code-msg', 'ورود موفق! در حال انتقال...', 'ok');
       setTimeout(() => location.href = 'dashboard.html', 800);
     } else showMsg('code-msg', d.error || 'کد اشتباهه', 'err');
@@ -240,7 +246,7 @@ async function loginPassword(){
     const d = await r.json();
     btn.disabled = false; btn.textContent = 'ورود';
     if (d.ok){
-      localStorage.setItem('mm_user', JSON.stringify(d.user));
+      saveLogin(d);
       showMsg('pass-msg','ورود موفق! در حال انتقال...','ok');
       setTimeout(() => location.href = 'dashboard.html', 700);
     } else showMsg('pass-msg', d.error || 'ورود ناموفق', 'err');
@@ -289,7 +295,7 @@ function handleGoogleCredential(response){
       const txt = await r.text();
       let d;
       try { d = JSON.parse(txt); } catch(e){ showMsg('phone-msg', 'پاسخ نامعتبر از سرور: '+txt.substring(0,150), 'err'); return; }
-      if (d.ok){ localStorage.setItem('mm_user', JSON.stringify(d.user)); location.href = 'dashboard.html'; }
+      if (d.ok){ saveLogin(d); location.href = 'dashboard.html'; }
       else showMsg('phone-msg', d.error || 'خطا در ورود با گوگل', 'err');
     }).catch(err=>{
       showMsg('phone-msg', 'خطای اتصال به سرور: '+err.message, 'err');

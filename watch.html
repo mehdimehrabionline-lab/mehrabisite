@@ -222,15 +222,25 @@ function streamBase(){
   return (directOk && !sessionStorage.getItem('mm_direct_stream_bad')) ? DIRECT_STREAM_HOST : '';
 }
 
+let userSession = '';
+// نشست منقضی/باطل شده (مثلاً با دستگاه سوم وارد شدن) ← پاک کن و به ورود بفرست
+function sessionExpired(){
+  localStorage.removeItem('mm_session');
+  localStorage.removeItem('mm_user');
+  showErr('نشست شما منقضی شده یا از دستگاه دیگری وارد شده‌اید. لطفاً دوباره وارد شوید.', 'register.html', 'ورود');
+}
+
 async function init(){
   const stored = localStorage.getItem('mm_user');
-  if (!stored) { showErr('برای مشاهده دوره باید وارد حساب کاربری شوید.', 'register.html', 'ورود'); return; }
+  userSession = localStorage.getItem('mm_session') || '';
+  if (!stored || !userSession) { showErr('برای مشاهده دوره باید وارد حساب کاربری شوید.', 'register.html', 'ورود'); return; }
   const user = JSON.parse(stored);
   userPhone = user.phone;
   if (!courseId) { showErr('دوره‌ای انتخاب نشده.', 'dashboard.html', 'دوره‌های من'); return; }
 
   try {
-    const r = await fetch(`mycourses.php?p=${encodeURIComponent(user.phone)}&c=${encodeURIComponent(courseId)}`, {cache:'no-store'});
+    const r = await fetch(`mycourses.php?t=${encodeURIComponent(userSession)}&c=${encodeURIComponent(courseId)}`, {cache:'no-store'});
+    if (r.status === 401) { sessionExpired(); return; }
     const d = await r.json();
     if (!d.ok) { showErr(d.error || 'دسترسی ندارید', '/#courses', 'مشاهده دوره‌ها'); return; }
 
@@ -306,7 +316,8 @@ function renderPlaylist(){
 /* توکن‌ها همراه لیست جلسات میان؛ فقط اگه صفحه بیشتر از ۷ ساعت باز مونده باشه تازه می‌شن */
 async function refreshTokenIfNeeded(v){
   if (v.token && (Date.now() - tokenIssuedAt) < (tokenTtl - 3600) * 1000) return v.token;
-  const tr = await fetch(`videotoken.php?p=${encodeURIComponent(userPhone)}&v=${encodeURIComponent(v.id)}&c=${encodeURIComponent(courseId)}`, {cache:'no-store'});
+  const tr = await fetch(`videotoken.php?t=${encodeURIComponent(userSession)}&v=${encodeURIComponent(v.id)}&c=${encodeURIComponent(courseId)}`, {cache:'no-store'});
+  if (tr.status === 401) { sessionExpired(); throw new Error('نشست منقضی شده؛ دوباره وارد شو'); }
   const td = await tr.json();
   if (!td.ok) throw new Error(td.error || 'خطا در دریافت دسترسی');
   v.token = td.token;
@@ -533,7 +544,8 @@ async function downloadAttachment(attachId, btn){
   btn.disabled = true;
   if (dl) dl.textContent = '...';
   try {
-    const r = await fetch(`attachtoken.php?p=${encodeURIComponent(userPhone)}&a=${encodeURIComponent(attachId)}`);
+    const r = await fetch(`attachtoken.php?t=${encodeURIComponent(userSession)}&a=${encodeURIComponent(attachId)}`);
+    if (r.status === 401) { sessionExpired(); return; }
     const d = await r.json();
     btn.disabled = false;
     if (dl) dl.textContent = original;
