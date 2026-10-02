@@ -255,6 +255,7 @@ A.openPayment = async (id) => {
     <dl class="kv">
       <dt>هنرجو</dt><dd>${u?html`<a href="#/students/${u.id}" data-close-drawer>${A.userName(u)}</a> <span class="mono muted">${u.phone||''}</span>`:'—'}</dd>
       <dt>دوره</dt><dd>${c?c.title:'—'}</dd>
+      ${p.promo_code?html`<dt>کد تخفیف/معرف</dt><dd><b class="mono">${p.promo_code}</b> — تخفیف ${A.money(p.discount_amount||0)} از ${A.money(p.original_amount||p.amount)}</dd>`:''}
       <dt>تاریخ ایجاد</dt><dd>${A.dt(p.created_at)}</dd>
       <dt>تاریخ پرداخت</dt><dd>${p.paid_at?A.dt(p.paid_at):'—'}</dd>
       <dt>کد رهگیری (track)</dt><dd class="mono">${p.track_id||'—'} ${p.track_id?html`<button class="btn ghost sm" data-act="copy" data-v="${p.track_id}">${A.icon('copy')}</button>`:''}</dd>

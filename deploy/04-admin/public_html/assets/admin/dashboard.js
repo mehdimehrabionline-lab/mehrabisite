@@ -14,13 +14,14 @@ A.route('dashboard', { title:'داشبورد', async render(box){
   const sum = (arr)=>arr.reduce((s,p)=>s+p.amount,0);
   const inR = (from)=>paid.filter(p=>at(p)>=from);
   const t = inR(today), w = inR(d7), mo = inR(m0);
-  const [newUsers, pendLive, failToday, cmPend, ordNew, tstPend, licPend, pendStale] = await Promise.all([
+  const [newUsers, pendLive, failToday, cmPend, ordNew, tstPend, licPend, pendStale, commPend] = await Promise.all([
     A.count('academy_users', q=>q.gte('created_at',d7.toISOString())),
     A.count('payments', q=>q.eq('status','pending').not('track_id','is',null).gte('created_at',new Date(Date.now()-3600000).toISOString())),
     A.count('payments', q=>q.eq('status','failed').gte('created_at',today.toISOString())),
     A.count('comments', q=>q.eq('is_approved',false)), A.count('orders', q=>q.eq('status','new')),
     A.count('testimonials', q=>q.eq('is_published',false)), A.count('course_orders', q=>q.eq('status','pending')),
-    A.count('payments', q=>q.eq('status','pending').not('track_id','is',null).lt('created_at',new Date(Date.now()-900000).toISOString())) ]);
+    A.count('payments', q=>q.eq('status','pending').not('track_id','is',null).lt('created_at',new Date(Date.now()-900000).toISOString())),
+    A.count('promo_redemptions', q=>q.eq('commission_status','pending').gt('commission_amount',0)) ]);
   const mism = payOk ? await A.pay.mismatches(paid.filter(p=>at(p)>=d30)) : [];
   const byDay = {}; paid.forEach(p=>{ const k=A.dayKey(at(p)); byDay[k]=(byDay[k]||0)+p.amount; });
   const days=[]; for(let i=0;i<30;i++){ const d=A.addDays(d30,i); days.push({label:A.date(d),short:A.dshort(d),value:byDay[A.dayKey(d)]||0}); }
@@ -32,6 +33,7 @@ A.route('dashboard', { title:'داشبورد', async render(box){
   const attn = [];
   if(mism.length) attn.push(['err',`${A.fa(mism.length)} پرداخت موفق بدون دسترسی دوره (۳۰ روز اخیر)`,'payments/mismatch','بررسی']);
   if(pendStale) attn.push(['warn',`${A.fa(pendStale)} تراکنش معلق که ممکن است پرداخت شده باشد`,'payments','بررسی از زیبال']);
+  if(commPend) attn.push(['warn',`${A.fa(commPend)} پورسانت معرف پرداخت‌نشده`,'codes/comm','مشاهده']);
   if(licPend) attn.push(['warn',`${A.fa(licPend)} سفارش لایسنسی در انتظار تأیید`,'licenses','مشاهده']);
   if(ordNew) attn.push(['info',`${A.fa(ordNew)} پیام/سفارش جدید از فرم تماس`,'inbox','صندوق پیام']);
   if(cmPend) attn.push(['info',`${A.fa(cmPend)} دیدگاه بلاگ در انتظار تأیید`,'inbox','صندوق پیام']);

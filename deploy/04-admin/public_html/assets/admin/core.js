@@ -267,6 +267,7 @@ const NAV = [
   { id:'payments', t:'تراکنش‌ها', i:'card', roles:'owner,support' },
   { id:'access', t:'دسترسی‌ها و اعطای دستی', i:'key', roles:'owner,support' },
   { id:'licenses', t:'سفارش‌های لایسنسی', i:'tag', roles:'owner' },
+  { id:'codes', t:'کدهای تخفیف و معرف', i:'tag', roles:'owner' },
   { g:'هنرجویان', roles:'owner,support' },
   { id:'students', t:'هنرجویان', i:'users', roles:'owner,support' },
   { g:'آموزش', roles:'owner,editor' },

@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&family=Fraunces:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/admin/admin.css?v=20261003a">
+<link rel="stylesheet" href="assets/admin/admin.css?v=20261003b">
 <link rel="icon" href="assets/favicon.ico" sizes="any">
 </head>
 <body>
@@ -61,7 +61,7 @@
 /* بارگذاری کتابخانه‌ی supabase: اول نسخه‌ی محلی (اگر روی هاست باشد)، بعد CDN. بعد بقیه‌ی فایل‌ها به‌ترتیب. */
 (function(){
   function load(src){ return new Promise(function(res,rej){ var s=document.createElement('script'); s.src=src; s.onload=res; s.onerror=function(){ rej(new Error(src)); }; document.head.appendChild(s); }); }
-  var V='?v=20261003a', mods=['core','dashboard','sales','students','courses','content','blog','inbox','system','help'];
+  var V='?v=20261003b', mods=['core','dashboard','sales','students','courses','content','blog','inbox','codes','system','help'];
   load('assets/supabase.min.js').catch(function(){ return load('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2'); })
   .then(function(){ return load('supabase-config.js'); })
   .then(function(){ return mods.reduce(function(p,m){ return p.then(function(){ return load('assets/admin/'+m+'.js'+V); }); }, Promise.resolve()); })
