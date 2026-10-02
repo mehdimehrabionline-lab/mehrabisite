@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>پنل کاربری | آکادمی مهدی محرابی</title>
+<link rel="icon" type="image/jpeg" href="assets/portrait.jpg"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600&family=Fraunces:ital,opsz,wght@0,9..144,300;1,9..144,300&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600&family=Fraunces:ital,opsz,wght@0,9..144,300;1,9..144,300&display=swap"></noscript>
+<style>
+:root{--bg:#0c0b09;--bg-2:#15130f;--bg-3:#1d1a15;--ink:#f4f1ea;--ink-2:#d8d3c8;--muted:#8f897e;--line:rgba(244,241,234,.12);--line-2:rgba(244,241,234,.20);--accent:#c98a5a;--accent-2:#a85a32;--ok:#7ec77e;--warn:#e0b060;--err:#e07a6a;--serif:'Fraunces','Vazirmatn',serif;--sans:'Vazirmatn',system-ui,sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--sans);background:var(--bg);color:var(--ink);min-height:100vh;-webkit-font-smoothing:antialiased}
+.nav{display:flex;justify-content:space-between;align-items:center;padding:16px 32px;border-bottom:1px solid var(--line);background:rgba(12,11,9,.96);position:sticky;top:0;z-index:100;backdrop-filter:blur(12px)}
+.nav .brand{font-family:var(--serif);font-style:italic;font-size:19px;color:var(--ink);text-decoration:none}
+.nav .brand b{font-style:normal}
+.nav-right{display:flex;gap:16px;align-items:center}
+.nav-right a{color:var(--muted);text-decoration:none;font-size:13px;transition:color .2s}
+.nav-right a:hover{color:var(--accent)}
+.logout{background:none;border:1px solid var(--line);color:var(--muted);padding:6px 14px;border-radius:20px;font-family:var(--sans);font-size:12px;cursor:pointer}
+.logout:hover{border-color:var(--err);color:var(--err)}
+
+.wrap{max-width:860px;margin:0 auto;padding:32px 20px 60px}
+
+/* هشدار تکمیل پروفایل */
+.alert{background:rgba(224,176,96,.1);border:1px solid rgba(224,176,96,.35);border-radius:10px;padding:18px 20px;margin-bottom:24px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.alert .ic{font-size:24px}
+.alert .txt{flex:1;min-width:200px}
+.alert .txt strong{display:block;font-size:14px;margin-bottom:4px;color:var(--warn)}
+.alert .txt span{font-size:12px;color:var(--muted);line-height:1.7}
+.alert button{background:var(--warn);color:#0a0a0a;border:none;padding:9px 18px;border-radius:6px;font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap}
+
+.head{display:flex;align-items:center;gap:18px;margin-bottom:28px;padding:24px;background:var(--bg-2);border:1px solid var(--line);border-radius:12px}
+.avatar{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:22px;color:#0a0a0a;flex-shrink:0}
+.head-info h2{font-family:var(--serif);font-weight:400;font-size:20px;margin-bottom:3px}
+.head-info p{font-size:12px;color:var(--muted);direction:ltr;text-align:right}
+.head-badge{margin-right:auto;font-size:11px;padding:4px 12px;border-radius:20px;letter-spacing:1px}
+.badge-complete{background:rgba(126,199,126,.12);color:var(--ok);border:1px solid rgba(126,199,126,.3)}
+.badge-incomplete{background:rgba(224,176,96,.12);color:var(--warn);border:1px solid rgba(224,176,96,.3)}
+
+.tabs{display:flex;gap:0;margin-bottom:24px;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.tab{flex:1;padding:12px;background:none;border:none;color:var(--muted);font-family:var(--sans);font-size:13px;cursor:pointer;transition:all .2s}
+.tab.active{background:var(--accent);color:#0a0a0a;font-weight:600}
+
+.card{background:var(--bg-2);border:1px solid var(--line);border-radius:12px;padding:26px;margin-bottom:18px}
+.card h3{font-family:var(--serif);font-weight:400;font-size:18px;margin-bottom:6px}
+.card .card-sub{font-size:12px;color:var(--muted);margin-bottom:22px;line-height:1.7}
+.field{margin-bottom:16px}
+.field label{display:block;font-size:11px;letter-spacing:1.5px;color:var(--muted);margin-bottom:7px}
+.field label .req{color:var(--err);margin-right:3px}
+.field label .opt{color:var(--muted);opacity:.6;font-size:10px;margin-right:4px}
+.field input,.field select,.field textarea{width:100%;background:var(--bg);border:1px solid var(--line);padding:12px 14px;color:var(--ink);font-family:var(--sans);font-size:14px;border-radius:8px;outline:none;transition:border .2s}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--accent)}
+.field input:disabled{opacity:.45;cursor:not-allowed}
+.field select option{background:var(--bg-2)}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.save-btn{background:var(--accent);color:#0a0a0a;border:none;padding:12px 28px;font-family:var(--sans);font-size:14px;font-weight:600;cursor:pointer;border-radius:8px;transition:background .3s}
+.save-btn:hover{background:var(--accent-2);color:#fff}
+.save-btn:disabled{opacity:.5;cursor:not-allowed}
+.msg{font-size:13px;margin-top:14px;padding:10px 14px;border-radius:8px;display:none}
+.msg.ok{background:rgba(126,199,126,.1);border:1px solid var(--ok);color:var(--ok);display:block}
+.msg.err{background:rgba(224,122,106,.1);border:1px solid var(--err);color:var(--err);display:block}
+
+.order{background:var(--bg-3);border:1px solid var(--line);border-radius:10px;padding:20px;margin-bottom:14px}
+.order-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:10px}
+.order-head h4{font-size:15px;font-weight:500}
+.order-date{font-size:11px;color:var(--muted)}
+.status{font-size:11px;padding:4px 12px;border-radius:20px;letter-spacing:.5px;white-space:nowrap}
+.st-pending{background:rgba(224,176,96,.12);color:var(--warn);border:1px solid rgba(224,176,96,.3)}
+.st-approved{background:rgba(126,199,126,.12);color:var(--ok);border:1px solid rgba(126,199,126,.3)}
+.st-rejected{background:rgba(224,122,106,.12);color:var(--err);border:1px solid rgba(224,122,106,.3)}
+.license{background:var(--bg);border:1px dashed var(--line-2);border-radius:8px;padding:14px;margin-top:12px}
+.license-label{font-size:10px;letter-spacing:2px;color:var(--muted);margin-bottom:8px}
+.license-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.license-key{font-family:monospace;font-size:13px;direction:ltr;color:var(--accent);flex:1;word-break:break-all;min-width:150px}
+.copy-btn{background:none;border:1px solid var(--line);color:var(--muted);padding:6px 14px;border-radius:6px;font-size:11px;cursor:pointer;white-space:nowrap;font-family:var(--sans)}
+.copy-btn:hover{border-color:var(--accent);color:var(--accent)}
+.empty{text-align:center;padding:44px 20px;color:var(--muted)}
+.empty .ic{font-size:38px;margin-bottom:12px;opacity:.5}
+.empty p{font-size:14px;margin-bottom:16px;line-height:1.8}
+.empty a{color:var(--accent);text-decoration:none;font-size:14px}
+.loading{text-align:center;padding:36px;color:var(--muted);font-style:italic;font-size:14px}
+footer{padding:22px;border-top:1px solid var(--line);text-align:center}
+footer p{font-size:12px;color:var(--muted)}
+footer a{color:var(--accent);text-decoration:none}
+@media(max-width:600px){.nav{padding:14px 18px}.wrap{padding:22px 14px 40px}.grid-2{grid-template-columns:1fr}.head{flex-direction:column;text-align:center}.head-badge{margin:0}}
+.star-rating{display:flex;direction:rtl;width:fit-content;gap:2px;margin:2px 0}
+.star-rating .star{background:none;border:none;font-size:36px;line-height:1;padding:6px 5px;cursor:pointer;color:var(--line-2);transition:color .12s,transform .12s;-webkit-tap-highlight-color:transparent;font-family:inherit}
+.star-rating .star.on{color:var(--accent)}
+.star-rating .star:hover{transform:scale(1.12)}
+.star-rating .star:focus-visible{outline:2px solid var(--accent);border-radius:8px}
+.star-label{font-size:12px;color:var(--muted);margin-top:4px;min-height:18px}
+</style>
+</head>
+<body>
+<header class="nav">
+  <a href="/" class="brand">Mehdi <b>Mehrabi</b></a>
+  <div class="nav-right">
+    <a href="/#courses">دوره‌ها</a>
+    <a href="blog.html">بلاگ</a>
+    <button class="logout" onclick="logout()">خروج</button>
+  </div>
+</header>
+
+<div class="wrap">
+  <div id="loading" class="loading">در حال بارگذاری...</div>
+  <div id="main" style="display:none">
+
+    <!-- هشدار تکمیل پروفایل -->
+    <div class="alert" id="profileAlert" style="display:none">
+      <div class="ic">⚠️</div>
+      <div class="txt">
+        <strong>پروفایلت کامل نیست</strong>
+        <span>برای خرید دوره باید نام، ایمیل و بقیه اطلاعات رو تکمیل کنی.</span>
+      </div>
+      <button onclick="switchTab('profile')">تکمیل اطلاعات</button>
+    </div>
+
+    <div class="head">
+      <div class="avatar" id="avatar">؟</div>
+      <div class="head-info">
+        <h2 id="userName">کاربر آکادمی</h2>
+        <p id="userPhone"></p>
+      </div>
+      <span class="head-badge" id="profileBadge"></span>
+    </div>
+
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('orders')">🎓 دوره‌های من</button>
+      <button class="tab" onclick="switchTab('review')" id="reviewTabBtn" style="display:none">⭐ ثبت نظر</button>
+      <button class="tab" onclick="switchTab('profile')">👤 پروفایل</button>
+    </div>
+
+    <!-- دوره‌ها -->
+    <div id="tab-orders">
+      <div class="card">
+        <h3>دوره‌های خریداری‌شده</h3>
+        <p class="card-sub">دوره‌هایی که خریدی و وضعیت سفارش‌هات</p>
+        <div id="ordersList"><div class="loading">در حال بارگذاری…</div></div>
+      </div>
+    </div>
+
+    <!-- ثبت نظر -->
+    <div id="tab-review" style="display:none">
+      <div class="card">
+        <h3>نظرت رو با بقیه به اشتراک بذار</h3>
+        <p class="card-sub">نظرت بعد از بررسی توسط تیم آکادمی، کنار بقیه نظرات دانشجویان نمایش داده می‌شه</p>
+        <div class="field">
+          <label>دوره‌ای که گذروندی</label>
+          <select id="revCourse"></select>
+        </div>
+        <div class="field">
+          <label>امتیاز</label>
+          <div class="star-rating" id="revStars" role="radiogroup" aria-label="امتیاز شما"><button type="button" class="star" data-v="1" role="radio" aria-label="1 از ۵">★</button><button type="button" class="star" data-v="2" role="radio" aria-label="2 از ۵">★</button><button type="button" class="star" data-v="3" role="radio" aria-label="3 از ۵">★</button><button type="button" class="star" data-v="4" role="radio" aria-label="4 از ۵">★</button><button type="button" class="star" data-v="5" role="radio" aria-label="5 از ۵">★</button></div>
+          <div class="star-label" id="revStarLabel"></div>
+        </div>
+        <div class="field">
+          <label>نظرت</label>
+          <textarea id="revContent" placeholder="تجربه‌ت از این دوره چطور بود؟" style="min-height:110px"></textarea>
+        </div>
+        <button class="save-btn" id="revSubmitBtn" onclick="submitReview()">ثبت نظر</button>
+        <div class="msg" id="review-msg" style="margin-top:12px;display:none"></div>
+      </div>
+    </div>
+
+    <!-- پروفایل -->
+    <div id="tab-profile" style="display:none">
+      <!-- ثبت شماره موبایل برای کاربرانی که با گوگل وارد شده‌اند -->
+      <div class="card" id="phoneCard" style="display:none;border-color:rgba(224,176,96,.45)">
+        <h3>ثبت شماره موبایل</h3>
+        <p class="card-sub">برای خرید دوره و دریافت پیامک‌های مهم، شماره‌ی موبایلت لازمه. یک کد ۶ رقمی برات پیامک می‌کنیم.</p>
+        <div class="field" id="pa-step1">
+          <label><span class="req">*</span>شماره موبایل</label>
+          <input id="pa-phone" type="tel" inputmode="numeric" dir="ltr" placeholder="09xxxxxxxxx" maxlength="11" autocomplete="tel"/>
+          <button class="save-btn" id="pa-send" onclick="phoneSendCode()" style="margin-top:12px">دریافت کد</button>
+        </div>
+        <div class="field" id="pa-step2" style="display:none">
+          <label>کد ارسال‌شده به <span id="pa-shown" dir="ltr"></span></label>
+          <input id="pa-code" type="text" inputmode="numeric" dir="ltr" placeholder="کد ۶ رقمی" maxlength="6" autocomplete="one-time-code"/>
+          <button class="save-btn" id="pa-confirm" onclick="phoneConfirm()" style="margin-top:12px">تأیید و ثبت شماره</button>
+          <button type="button" class="copy-btn" id="pa-resend" onclick="phoneSendCode(true)" style="margin-top:12px;margin-right:8px" disabled>ارسال مجدد</button>
+        </div>
+        <div class="msg" id="pa-msg"></div>
+      </div>
+      <div class="card">
+        <h3>اطلاعات پایه</h3>
+        <p class="card-sub">این اطلاعات برای ثبت خرید و ارتباط با تو ضروریه</p>
+        <div class="grid-2">
+          <div class="field">
+            <label><span class="req">*</span>نام و نام خانوادگی</label>
+            <input id="p-name" placeholder="مثلاً علی محمدی"/>
+          </div>
+          <div class="field">
+            <label>شماره موبایل</label>
+            <input id="p-phone" disabled dir="ltr"/>
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="field">
+            <label><span class="req">*</span>ایمیل</label>
+            <input id="p-email" type="email" dir="ltr" placeholder="example@gmail.com"/>
+          </div>
+          <div class="field">
+            <label>نام کاربری</label>
+            <input id="p-username" disabled dir="ltr"/>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>اطلاعات تکمیلی</h3>
+        <p class="card-sub">کمک می‌کنه محتوای بهتری برات آماده کنیم</p>
+        <div class="grid-2">
+          <div class="field">
+            <label>سن <span class="opt">(اختیاری)</span></label>
+            <input id="p-age" type="number" placeholder="۲۵"/>
+          </div>
+          <div class="field">
+            <label>شغل <span class="opt">(اختیاری)</span></label>
+            <input id="p-job" placeholder="گرافیست، عکاس، ..."/>
+          </div>
+        </div>
+        <div class="field">
+          <label>هدف از یادگیری <span class="opt">(اختیاری)</span></label>
+          <select id="p-goal">
+            <option value="">انتخاب کن…</option>
+            <option>درآمدزایی با هوش مصنوعی</option>
+            <option>ارتقاء مهارت شغلی</option>
+            <option>شروع کسب‌وکار جدید</option>
+            <option>علاقه شخصی</option>
+            <option>استفاده در کسب‌وکار فعلی</option>
+            <option>سایر</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>چطور با ما آشنا شدی؟ <span class="opt">(اختیاری)</span></label>
+          <select id="p-how">
+            <option value="">انتخاب کن…</option>
+            <option>اینستاگرام</option>
+            <option>تلگرام</option>
+            <option>جستجوی گوگل</option>
+            <option>معرفی دوست</option>
+            <option>یوتیوب</option>
+            <option>سایر</option>
+          </select>
+        </div>
+        <button class="save-btn" id="saveBtn" onclick="saveProfile()">ذخیره اطلاعات</button>
+        <div class="msg" id="profile-msg"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<footer><p>آکادمی مهدی محرابی | <a href="/">mehdimehrabi.ir</a></p></footer>
+
+<script>
+const FN = 'https://rknsiuyfhxnmhnfesfhh.supabase.co/functions/v1';
+let user = null;
+const SESSION = () => localStorage.getItem('mm_session') || '';
+// نشست منقضی/باطل شده (یا دستگاه سوم وارد شده) ← پاک کن و به صفحه ورود برگرد
+function forceRelogin(){
+  try { localStorage.removeItem(cacheKey()); } catch(e){}
+  localStorage.removeItem('mm_user');
+  localStorage.removeItem('mm_session');
+  location.href = 'register.html';
+}
+
+let paidCourses = [], legacyOrders = [];
+let coursesDone = false, ordersDone = false, coursesFailed = false, ordersPhone = null;
+const cacheKey = () => 'mm_courses_v1_' + ((user && user.phone) || '');
+
+async function init(){
+  const stored = localStorage.getItem('mm_user');
+  if (!stored || !SESSION()){ localStorage.removeItem('mm_user'); localStorage.removeItem('mm_session'); location.href = 'register.html'; return; }
+  try { user = JSON.parse(stored); }
+  catch(e){ localStorage.removeItem('mm_user'); location.href = 'register.html'; return; }
+
+  // بلافاصله صفحه رو نشون بده — اطلاعات ذخیره‌شده‌ی قبلی کافیه و منتظر سرور خارجی نمی‌مونیم
+  document.getElementById('loading').style.display = 'none';
+  document.getElementById('main').style.display = 'block';
+  render();
+  loadOrders();
+  refreshProfile();   // در پس‌زمینه
+  if (/^#(phone|profile)$/.test(location.hash)) switchTab('profile');
+}
+
+// تازه‌سازی پروفایل از سرور، بدون اینکه نمایش صفحه رو معطل کنه
+async function refreshProfile(){
+  try {
+    const r = await fetch(`${FN}/user-auth`, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ action:'get_profile', token: SESSION() }),
+    });
+    if (r.status === 401){ forceRelogin(); return; }
+    const d = await r.json();
+    if (d.ok && d.user){
+      user = d.user;
+      localStorage.setItem('mm_user', JSON.stringify(user));
+      // اگه کاربر همین الان داره پروفایلش رو ویرایش می‌کنه، چیزی که تایپ کرده رو خراب نکن
+      if (document.getElementById('tab-profile').style.display !== 'block') render();
+      // اگه شماره‌ی کاربر با اطلاعات ذخیره‌شده فرق داشت، دوره‌ها رو دوباره بگیر
+      if (user.phone && user.phone !== ordersPhone) loadOrders();
+    }
+  } catch(e){}
+}
+
+function isComplete(u){ return !!(u.full_name && u.email && u.phone); }
+
+function render(){
+  document.getElementById('userName').textContent = user.full_name || 'کاربر آکادمی';
+  document.getElementById('userPhone').textContent = user.phone || '';
+  document.getElementById('avatar').textContent = (user.full_name || 'ک')[0];
+  document.getElementById('p-name').value = user.full_name || '';
+  document.getElementById('p-phone').value = user.phone || '';
+  document.getElementById('p-phone').placeholder = user.phone ? '' : 'هنوز ثبت نشده';
+  const phoneCard = document.getElementById('phoneCard');
+  if (phoneCard) phoneCard.style.display = (user.phone && !window.__phoneJustSet) ? 'none' : 'block';
+  document.getElementById('p-email').value = user.email || '';
+  document.getElementById('p-username').value = user.username || '';
+  document.getElementById('p-age').value = user.age || '';
+  document.getElementById('p-job').value = user.job || '';
+  document.getElementById('p-goal').value = user.goal || '';
+  document.getElementById('p-how').value = user.how_found || '';
+
+  const badge = document.getElementById('profileBadge');
+  const alert = document.getElementById('profileAlert');
+  if (isComplete(user)){
+    badge.textContent = '✓ پروفایل کامل';
+    badge.className = 'head-badge badge-complete';
+    alert.style.display = 'none';
+  } else {
+    badge.textContent = '! ناقص';
+    badge.className = 'head-badge badge-incomplete';
+    alert.style.display = 'flex';
+    const alertTxt = alert.querySelector('.txt span');
+    if (alertTxt) alertTxt.textContent = !user.phone
+      ? 'شماره‌ی موبایلت هنوز ثبت نشده؛ برای خرید دوره لازمه.'
+      : 'برای خرید دوره باید نام و ایمیل رو هم تکمیل کنی.';
+  }
+}
+
+function switchTab(tab){
+  document.querySelectorAll('.tab').forEach((t,i) =>
+    t.classList.toggle('active', (tab==='orders'&&i===0)||(tab==='review'&&i===1)||(tab==='profile'&&i===2)));
+  document.getElementById('tab-orders').style.display = tab==='orders'?'block':'none';
+  document.getElementById('tab-review').style.display = tab==='review'?'block':'none';
+  document.getElementById('tab-profile').style.display = tab==='profile'?'block':'none';
+  if (tab==='profile'||tab==='review') window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function setPaid(list){
+  paidCourses = Array.isArray(list) ? list : [];
+  window.__myCourses = paidCourses;
+  const rb = document.getElementById('reviewTabBtn');
+  const sel = document.getElementById('revCourse');
+  if (paidCourses.length){
+    const prev = sel.value;
+    rb.style.display = 'inline-flex';
+    sel.innerHTML = paidCourses.map(c => `<option value="${c.id}">${c.title}</option>`).join('');
+    if (prev) sel.value = prev;
+  } else {
+    rb.style.display = 'none';
+  }
+}
+
+function courseCard(c){
+  const d = c.granted_at ? new Date(c.granted_at).toLocaleDateString('fa-IR',{year:'numeric',month:'long',day:'numeric'}) : '';
+  return `<div class="order" style="border-color:rgba(126,199,126,.3)">
+    <div class="order-head">
+      <div>
+        <h4>${c.title}</h4>
+        ${d ? `<div class="order-date">📅 ${d}</div>` : ''}
+      </div>
+      <span class="status st-approved">✅ فعال</span>
+    </div>
+    <a href="watch.html?course=${c.id}" style="display:inline-block;background:var(--accent);color:#0a0a0a;padding:11px 24px;border-radius:8px;text-decoration:none;font-size:14px;font-weight:600;margin-top:12px">▶ مشاهده ویدیوها</a>
+  </div>`;
+}
+
+// هر چیزی که تا الان رسیده رو نشون می‌ده؛ هیچ بخشی منتظر بخش دیگه نمی‌مونه
+function paint(){
+  const el = document.getElementById('ordersList');
+  if (!paidCourses.length && !legacyOrders.length){
+    if (!(coursesDone && ordersDone)) return;            // هنوز چیزی نرسیده
+    if (coursesFailed){
+      el.innerHTML = `<div class="empty"><div class="ic">⚠️</div><p>دریافت دوره‌ها با مشکل روبه‌رو شد.</p><a href="#" onclick="loadOrders();return false">تلاش دوباره ←</a></div>`;
+      return;
+    }
+    el.innerHTML = `<div class="empty"><div class="ic">🎓</div><p>هنوز دوره‌ای نخریدی.</p><a href="/#courses">مشاهده دوره‌ها ←</a></div>`;
+    return;
+  }
+  let html = '';
+  if (coursesDone && coursesFailed && !paidCourses.length){
+    html += `<p style="font-size:12px;color:var(--err);margin-bottom:10px">دریافت دوره‌های آنلاین با مشکل روبه‌رو شد. <a href="#" onclick="loadOrders();return false" style="color:var(--accent)">تلاش دوباره</a></p>`;
+  }
+  if (paidCourses.length) html += paidCourses.map(courseCard).join('');
+  if (legacyOrders.length) html += renderOrders(legacyOrders);
+  el.innerHTML = html;
+}
+
+async function loadOrders(){
+  const phone = user.phone;
+  ordersPhone = phone;
+  coursesDone = ordersDone = coursesFailed = false;
+  legacyOrders = [];
+  paidCourses = [];
+
+  // ۱) آخرین لیست شناخته‌شده رو همون لحظه نشون بده (دوره‌ی خریداری‌شده کم تغییر می‌کنه)
+  try {
+    const c = JSON.parse(localStorage.getItem(cacheKey()) || 'null');
+    if (c && Array.isArray(c.courses) && c.courses.length){ setPaid(c.courses); paint(); }
+  } catch(e){}
+
+  // ۲) دوره‌های آنلاین و سفارش‌های قدیمی کارت‌به‌کارت هم‌زمان گرفته می‌شن (نه پشت‌سرهم)
+  const coursesP = fetch(`mycourses.php?t=${encodeURIComponent(SESSION())}`).then(r => { if (r.status === 401){ forceRelogin(); throw new Error('unauth'); } return r.json(); });
+  const ordersP = fetch(`${FN}/user-auth`, {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({ action:'get_orders', token: SESSION() }),
+  }).then(r => { if (r.status === 401){ forceRelogin(); throw new Error('unauth'); } return r.json(); });
+
+  coursesP.then(pd => {
+    if (phone !== ordersPhone) return;                    // جواب یک درخواست قدیمی
+    coursesDone = true;
+    if (pd && pd.ok){
+      setPaid(pd.courses || []);
+      try { localStorage.setItem(cacheKey(), JSON.stringify({ courses: paidCourses, t: Date.now() })); } catch(e){}
+    } else {
+      coursesFailed = true;                               // خطای موقت رو «دوره‌ای نخریدی» تعبیر نکن
+    }
+    paint();
+  }).catch(() => {
+    if (phone !== ordersPhone) return;
+    coursesDone = true; coursesFailed = true; paint();
+  });
+
+  ordersP.then(d => {
+    if (phone !== ordersPhone) return;
+    legacyOrders = (d && d.orders) || [];
+    ordersDone = true; paint();
+  }).catch(() => {
+    if (phone !== ordersPhone) return;
+    ordersDone = true; paint();
+  });
+}
+
+function renderOrders(orders){
+    const stMap = { pending:['⏳ در انتظار تأیید','st-pending'], approved:['✅ تأیید شده','st-approved'], rejected:['❌ رد شده','st-rejected'] };
+    return orders.map(o => {
+      const [stText, stClass] = stMap[o.status] || ['نامشخص','st-pending'];
+      return `<div class="order">
+        <div class="order-head">
+          <div>
+            <h4>${o.course_title || 'دوره آموزشی'}</h4>
+            <div class="order-date">📅 ${new Date(o.created_at).toLocaleDateString('fa-IR',{year:'numeric',month:'long',day:'numeric'})}</div>
+          </div>
+          <span class="status ${stClass}">${stText}</span>
+        </div>
+        ${o.status==='approved' && o.license_key ? `
+          <div class="license">
+            <div class="license-label">🔑 کد دسترسی</div>
+            <div class="license-row">
+              <div class="license-key">${o.license_key}</div>
+              <button class="copy-btn" onclick="navigator.clipboard.writeText('${o.license_key}');this.textContent='✓ کپی شد';setTimeout(()=>this.textContent='کپی',1800)">کپی</button>
+            </div>
+          </div>` : ''}
+        ${o.status==='pending' ? `<p style="font-size:12px;color:var(--muted);margin-top:8px">فیش شما در حال بررسیه. معمولاً کمتر از ۲ ساعت طول می‌کشه.</p>` : ''}
+        ${o.status==='rejected' ? `<p style="font-size:12px;color:var(--err);margin-top:8px">فیش تأیید نشد. با پشتیبانی تماس بگیر: ۰۹۱۷۰۰۷۳۰۱۰</p>` : ''}
+      </div>`;
+    }).join('');
+}
+
+async function saveProfile(){
+  const name = document.getElementById('p-name').value.trim();
+  const email = document.getElementById('p-email').value.trim();
+  const msg = document.getElementById('profile-msg');
+  const btn = document.getElementById('saveBtn');
+
+  if (!name){ msg.className='msg err'; msg.textContent='نام و نام خانوادگی الزامیه'; return; }
+  if (!email || !email.includes('@')){ msg.className='msg err'; msg.textContent='ایمیل معتبر وارد کن'; return; }
+
+  btn.disabled = true; btn.textContent = 'در حال ذخیره...';
+  try {
+    const r = await fetch(`${FN}/user-auth`, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        action:'update_profile', token: SESSION(),
+        full_name:name, email,
+        age: parseInt(document.getElementById('p-age').value)||null,
+        job: document.getElementById('p-job').value.trim()||null,
+        goal: document.getElementById('p-goal').value||null,
+        how_found: document.getElementById('p-how').value||null,
+      }),
+    });
+    if (r.status === 401){ forceRelogin(); return; }
+    const d = await r.json();
+    btn.disabled = false; btn.textContent = 'ذخیره اطلاعات';
+    if (d.ok){
+      user = d.user;
+      localStorage.setItem('mm_user', JSON.stringify(user));
+      render();
+      msg.className='msg ok'; msg.textContent='اطلاعات ذخیره شد ✓';
+      afterProfileComplete();
+      setTimeout(()=>{ msg.className='msg'; }, 3000);
+    } else {
+      msg.className='msg err'; msg.textContent = d.error||'خطا در ذخیره';
+    }
+  } catch(e){
+    btn.disabled = false; btn.textContent = 'ذخیره اطلاعات';
+    msg.className='msg err'; msg.textContent='خطا در ارتباط با سرور';
+  }
+}
+
+/* ── ثبت شماره‌ی موبایل (کاربرانی که با گوگل وارد شده‌اند) ── */
+function fa2en(s){
+  return String(s == null ? '' : s)
+    .replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d))
+    .replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d));
+}
+let paPhone = '', paTimer = null;
+function paMsg(text, type){ const el = document.getElementById('pa-msg'); if (!el) return; el.textContent = text; el.className = 'msg ' + type; }
+function paStartTimer(){
+  const b = document.getElementById('pa-resend'); let left = 60;
+  b.disabled = true; b.textContent = `ارسال مجدد (${left})`;
+  clearInterval(paTimer);
+  paTimer = setInterval(() => {
+    left--;
+    if (left <= 0){ clearInterval(paTimer); b.disabled = false; b.textContent = 'ارسال مجدد'; }
+    else b.textContent = `ارسال مجدد (${left})`;
+  }, 1000);
+}
+async function phoneSendCode(isResend){
+  const phone = isResend ? paPhone : fa2en(document.getElementById('pa-phone').value).replace(/[^0-9]/g,'');
+  if (!/^09\d{9}$/.test(phone)){ paMsg('شماره موبایل معتبر نیست (مثل 09123456789)', 'err'); return; }
+  const btn = document.getElementById(isResend ? 'pa-resend' : 'pa-send');
+  const original = btn.textContent;
+  btn.disabled = true; btn.textContent = 'در حال ارسال...';
+  try {
+    const r = await fetch(`${FN}/user-auth`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ action:'send_otp', phone }) });
+    const d = await r.json();
+    if (d.ok){
+      paPhone = phone;
+      document.getElementById('pa-shown').textContent = phone;
+      document.getElementById('pa-step2').style.display = 'block';
+      paStartTimer();
+      if (!isResend) { btn.disabled = false; btn.textContent = original; }
+      document.getElementById('pa-code').focus();
+      paMsg(isResend ? 'کد جدید ارسال شد ✓' : 'کد ارسال شد ✓', 'ok');
+    } else {
+      btn.disabled = false; btn.textContent = original;
+      paMsg(d.error || 'خطا در ارسال کد', 'err');
+    }
+  } catch(e){ btn.disabled = false; btn.textContent = original; paMsg('خطا در ارتباط با سرور', 'err'); }
+}
+async function phoneConfirm(){
+  const code = fa2en(document.getElementById('pa-code').value).replace(/[^0-9]/g,'');
+  if (!paPhone){ paMsg('اول شماره‌ت رو وارد کن و کد بگیر', 'err'); return; }
+  if (code.length !== 6){ paMsg('کد باید ۶ رقم باشه', 'err'); return; }
+  const btn = document.getElementById('pa-confirm');
+  btn.disabled = true; btn.textContent = 'در حال ثبت...';
+  try {
+    const r = await fetch(`${FN}/user-auth`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ action:'set_phone', token: SESSION(), id: user.id, phone: paPhone, code }) });
+    if (r.status === 401){ forceRelogin(); return; }
+    const d = await r.json();
+    btn.disabled = false; btn.textContent = 'تأیید و ثبت شماره';
+    if (d.ok && d.user){
+      user = d.user;
+      localStorage.setItem('mm_user', JSON.stringify(user));
+      window.__phoneJustSet = true;
+      clearInterval(paTimer);
+      document.getElementById('phoneCard').innerHTML = '<h3>✓ شماره‌ی موبایل ثبت شد</h3><p class="card-sub" style="margin-bottom:0">' + user.phone + '</p>';
+      render();
+      loadOrders();
+      afterProfileComplete();
+    } else {
+      const em = d.error || 'ثبت شماره ناموفق بود';
+      paMsg(/قبلاً برای حساب دیگری/.test(em)
+        ? 'این شماره قبلاً برای یک حساب دیگر ثبت شده. اگه قبلاً با همین شماره (کد پیامکی) ثبت‌نام کردی، از صفحه‌ی ورود با همون شماره وارد شو؛ برای یکی کردن حساب‌ها به پشتیبانی پیام بده: ۰۹۱۷۰۰۷۳۰۱۰'
+        : em, 'err');
+    }
+  } catch(e){ btn.disabled = false; btn.textContent = 'تأیید و ثبت شماره'; paMsg('خطا در ارتباط با سرور', 'err'); }
+}
+document.addEventListener('DOMContentLoaded', () => {
+  const pc = document.getElementById('pa-code'), pp = document.getElementById('pa-phone');
+  if (pp) { pp.addEventListener('input', e => { e.target.value = fa2en(e.target.value).replace(/[^0-9]/g,''); }); pp.addEventListener('keypress', e => { if (e.key === 'Enter') phoneSendCode(); }); }
+  if (pc) { pc.addEventListener('input', e => { e.target.value = fa2en(e.target.value).replace(/[^0-9]/g,''); if (e.target.value.length === 6) phoneConfirm(); }); }
+});
+
+// کاربر از صفحه‌ی خرید فرستاده شده بود تا اطلاعاتش را کامل کند ← بعد از کامل شدن برگردان
+function afterProfileComplete(){
+  if (!isComplete(user)) return;
+  let back = null; try { back = localStorage.getItem('mm_buy_return'); } catch(e){}
+  if (!back) return;
+  let target = null;
+  try { const u = new URL(back, location.origin); if (u.origin === location.origin) target = u.pathname + u.search + u.hash; } catch(e){}
+  try { localStorage.removeItem('mm_buy_return'); } catch(e){}
+  if (!target) return;
+  const main = document.getElementById('main');
+  const box = document.createElement('div');
+  box.className = 'alert'; box.style.cssText = 'border-color:rgba(126,199,126,.5);background:rgba(126,199,126,.1)';
+  box.innerHTML = '<div class="ic">✅</div><div class="txt"><strong style="color:var(--ok)">اطلاعاتت کامل شد</strong><span>در حال بازگشت به صفحه‌ی خرید…</span></div>';
+  const a = document.createElement('a'); a.href = target; a.className = 'save-btn'; a.style.cssText = 'text-decoration:none;display:inline-block'; a.textContent = 'ادامه‌ی خرید ←';
+  box.appendChild(a); main.insertBefore(box, main.firstChild);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  setTimeout(() => { location.href = target; }, 2500);
+}
+
+/* ── ثبت نظر ── */
+let selectedRating = 5;
+(function initStars(){
+  function setup(){
+    const wrap = document.getElementById('revStars');
+    if (!wrap) return;
+    const stars = Array.from(wrap.querySelectorAll('.star'));
+    const label = document.getElementById('revStarLabel');
+    const names = ['', 'ضعیف', 'متوسط', 'خوب', 'خیلی خوب', 'عالی'];
+    const fa = ['', '۱', '۲', '۳', '۴', '۵'];
+    function paint(n){
+      stars.forEach((s, i) => {
+        s.classList.toggle('on', i < n);
+        s.setAttribute('aria-checked', String(i + 1 === selectedRating));
+      });
+    }
+    function show(n){
+      paint(n);
+      if (label) label.textContent = fa[n] + ' از ۵ — ' + names[n];
+    }
+    stars.forEach((s, i) => {
+      const n = i + 1;
+      s.addEventListener('click', () => { selectedRating = n; show(n); });
+      s.addEventListener('mouseenter', () => paint(n));      // پیش‌نمایش با ماوس
+    });
+    wrap.addEventListener('mouseleave', () => show(selectedRating));
+    show(selectedRating);
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', setup);
+  else setup();
+})();
+
+async function submitReview(){
+  const courseId = document.getElementById('revCourse').value;
+  const content = document.getElementById('revContent').value.trim();
+  const msg = document.getElementById('review-msg');
+  const btn = document.getElementById('revSubmitBtn');
+
+  if (!courseId){ msg.className='msg err'; msg.style.display='block'; msg.textContent='یه دوره انتخاب کن'; return; }
+  if (content.length < 10){ msg.className='msg err'; msg.style.display='block'; msg.textContent='نظرت رو کمی کامل‌تر بنویس (حداقل ۱۰ کاراکتر)'; return; }
+
+  btn.disabled = true; btn.textContent = 'در حال ثبت...';
+  try {
+    const r = await fetch('submit-review.php', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ token: SESSION(), course_id: courseId, content, rating: selectedRating }),
+    });
+    if (r.status === 401){ forceRelogin(); return; }
+    const d = await r.json();
+    btn.disabled = false; btn.textContent = 'ثبت نظر';
+    if (d.ok) {
+      msg.className='msg ok'; msg.style.display='block'; msg.textContent=d.message;
+      document.getElementById('revContent').value='';
+    } else {
+      msg.className='msg err'; msg.style.display='block'; msg.textContent = d.error || 'خطا در ثبت نظر';
+    }
+  } catch(e) {
+    btn.disabled = false; btn.textContent = 'ثبت نظر';
+    msg.className='msg err'; msg.style.display='block'; msg.textContent='خطا در ارتباط با سرور';
+  }
+}
+
+function logout(){
+  // نشست رو روی سرور هم باطل کن (بی‌صدا؛ اگه خطا خورد مهم نیست)
+  const tk = SESSION();
+  if (tk) { try { fetch(`${FN}/user-auth`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ action:'logout', token: tk }), keepalive:true }); } catch(e){} }
+  try { localStorage.removeItem(cacheKey()); } catch(e){}
+  localStorage.removeItem('mm_user');
+  localStorage.removeItem('mm_session');
+  localStorage.removeItem('mm_token');
+  location.href = '/';
+}
+
+init();
+</script>
+</body>
+</html>
