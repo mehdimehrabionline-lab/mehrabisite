@@ -182,6 +182,7 @@ footer a{color:var(--accent);text-decoration:none}
           <button type="button" class="copy-btn" id="pa-resend" onclick="phoneSendCode(true)" style="margin-top:12px;margin-right:8px" disabled>ارسال مجدد</button>
         </div>
         <div class="msg" id="pa-msg"></div>
+        <button type="button" class="copy-btn" id="pa-login" onclick="goLoginWithPhone()" style="display:none;margin-top:12px">با همین شماره وارد شو ←</button>
       </div>
       <div class="card">
         <h3>اطلاعات پایه</h3>
@@ -283,7 +284,7 @@ async function init(){
   render();
   loadOrders();
   refreshProfile();   // در پس‌زمینه
-  if (/^#(phone|profile)$/.test(location.hash)) switchTab('profile');
+  if (shouldOpenProfileTab()) switchTab('profile');
 }
 
 // تازه‌سازی پروفایل از سرور، بدون اینکه نمایش صفحه رو معطل کنه
@@ -519,6 +520,25 @@ function fa2en(s){
     .replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d));
 }
 let paPhone = '', paTimer = null;
+const PHONE_TAKEN_MSG = 'این شماره قبلاً برای یک حساب دیگر ثبت شده است. اگه قبلاً با همین شماره (کد پیامکی) ثبت‌نام کردی، با همون شماره وارد شو؛ برای یکی کردن حساب‌ها به پشتیبانی پیام بده: ۰۹۱۷۰۰۷۳۰۱۰';
+function goLoginWithPhone(){
+  const tk = SESSION();
+  try { const b = localStorage.getItem('mm_buy_return'); if (b) localStorage.setItem('mm_redirect', b); } catch(e){}
+  if (tk) { try { fetch(`${FN}/user-auth`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ action:'logout', token: tk }), keepalive:true }); } catch(e){} }
+  try { localStorage.removeItem(cacheKey()); } catch(e){}
+  ['mm_user','mm_session','mm_token'].forEach(k => localStorage.removeItem(k));
+  location.href = 'register.html';
+}
+// تب پروفایل کِی خودکار باز شود؟ لینک #phone/#profile، یا برگشت از صفحه‌ی خرید، یا پروفایل ناقص و بدون دوره
+function shouldOpenProfileTab(){
+  if (/^#(phone|profile)$/.test(location.hash)) return true;
+  try { if (localStorage.getItem('mm_buy_return')) return true; } catch(e){}
+  if (!isComplete(user)){
+    try { const c = JSON.parse(localStorage.getItem(cacheKey()) || 'null'); if (c && Array.isArray(c.courses) && c.courses.length) return false; } catch(e){}
+    return true;
+  }
+  return false;
+}
 function paMsg(text, type){ const el = document.getElementById('pa-msg'); if (!el) return; el.textContent = text; el.className = 'msg ' + type; }
 function paStartTimer(){
   const b = document.getElementById('pa-resend'); let left = 60;
@@ -536,6 +556,23 @@ async function phoneSendCode(isResend){
   const btn = document.getElementById(isResend ? 'pa-resend' : 'pa-send');
   const original = btn.textContent;
   btn.disabled = true; btn.textContent = 'در حال ارسال...';
+  const loginBtn = document.getElementById('pa-login'); if (loginBtn) loginBtn.style.display = 'none';
+  if (!isResend){
+    // اگه این شماره قبلاً برای حساب دیگری ثبت شده، پیامک نفرست
+    try {
+      const cr = await fetch(`check-phone.php?t=${encodeURIComponent(SESSION())}&p=${encodeURIComponent(phone)}`, { cache:'no-store' });
+      // ۴۰۱ اینجا یعنی بررسی نشست ممکن نشد (مثلاً Supabase قطع است)؛ کاربر را بیرون نمی‌اندازیم، ثبت نهایی دوباره چک می‌کند
+      const cd = await cr.json();
+      if (cr.status === 429){ btn.disabled = false; btn.textContent = original; paMsg(cd.error || 'تعداد تلاش‌ها زیاد است؛ چند دقیقه بعد دوباره امتحان کن', 'err'); return; }
+      if (cd && cd.ok && cd.available === false){
+        btn.disabled = false; btn.textContent = original;
+        document.getElementById('pa-step2').style.display = 'none';
+        paMsg(PHONE_TAKEN_MSG, 'err');
+        if (loginBtn) loginBtn.style.display = 'inline-block';
+        return;
+      }
+    } catch(e){}   // بررسی جواب نداد ← ادامه می‌دیم؛ ثبت نهایی (set_phone) دوباره چک می‌کند
+  }
   try {
     const r = await fetch(`${FN}/user-auth`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ action:'send_otp', phone }) });
     const d = await r.json();
@@ -575,9 +612,9 @@ async function phoneConfirm(){
       afterProfileComplete();
     } else {
       const em = d.error || 'ثبت شماره ناموفق بود';
-      paMsg(/قبلاً برای حساب دیگری/.test(em)
-        ? 'این شماره قبلاً برای یک حساب دیگر ثبت شده. اگه قبلاً با همین شماره (کد پیامکی) ثبت‌نام کردی، از صفحه‌ی ورود با همون شماره وارد شو؛ برای یکی کردن حساب‌ها به پشتیبانی پیام بده: ۰۹۱۷۰۰۷۳۰۱۰'
-        : em, 'err');
+      const taken = /قبلاً برای حساب دیگری/.test(em);
+      paMsg(taken ? PHONE_TAKEN_MSG : em, 'err');
+      const lb = document.getElementById('pa-login'); if (lb) lb.style.display = taken ? 'inline-block' : 'none';
     }
   } catch(e){ btn.disabled = false; btn.textContent = 'تأیید و ثبت شماره'; paMsg('خطا در ارتباط با سرور', 'err'); }
 }
