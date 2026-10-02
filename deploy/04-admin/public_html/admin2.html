@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>پنل مدیریت — مهدی محرابی</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&family=Fraunces:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/admin/admin.css?v=20261003a">
+<link rel="icon" href="assets/favicon.ico" sizes="any">
+</head>
+<body>
+
+<!-- ورود -->
+<div id="login">
+  <div class="login-card">
+    <div class="brand"><b>مهدی</b> محرابی</div>
+    <div class="sub">پنل مدیریت</div>
+    <form id="loginForm">
+      <div class="fld"><label class="lb">ایمیل</label><input class="in ltr" id="loginEmail" type="email" autocomplete="username" required></div>
+      <div class="fld"><label class="lb">رمز عبور</label><input class="in ltr" id="loginPass" type="password" autocomplete="current-password" required></div>
+      <div id="loginErr" class="alert err hide"></div>
+      <button class="btn primary" id="loginBtn" style="width:100%;justify-content:center;padding:11px;margin-top:6px">ورود به پنل</button>
+    </form>
+    <form id="mfaForm" class="hide">
+      <p class="muted" style="margin-bottom:14px">کد ۶ رقمی برنامه‌ی احراز هویت (Google Authenticator و مشابه) را وارد کن.</p>
+      <div class="fld"><input class="in ltr" id="mfaCode" inputmode="numeric" maxlength="8" autocomplete="one-time-code" style="text-align:center;font-size:20px;letter-spacing:6px"></div>
+      <div id="mfaErr" class="alert err hide"></div>
+      <button class="btn primary" style="width:100%;justify-content:center;padding:11px">تأیید و ورود</button>
+      <button type="button" id="mfaCancel" class="btn ghost" style="width:100%;justify-content:center;margin-top:8px">انصراف</button>
+    </form>
+  </div>
+</div>
+
+<!-- برنامه -->
+<div id="app">
+  <aside id="aside">
+    <div class="brand-box"><div class="brand"><b>مهدی</b> محرابی</div><small>پنل مدیریت · نسخه‌ی ۲</small></div>
+    <nav id="nav"></nav>
+    <div class="foot">
+      <div class="av" id="userAv">م</div>
+      <div><div id="userName">—</div><div id="roleName" style="font-size:11px"></div></div>
+      <button class="btn ghost sm" id="logoutBtn" title="خروج">خروج</button>
+    </div>
+  </aside>
+  <div class="main">
+    <div class="topbar">
+      <button class="btn iconbtn menu-toggle" id="menuBtn" aria-label="منو"><svg class="ic" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+      <h1 id="pageTitle">…</h1>
+      <div class="sp"></div>
+      <button class="searchbtn" id="searchBtn"><svg class="ic" viewBox="0 0 24 24"><path d="M11 19a8 8 0 100-16 8 8 0 000 16zM21 21l-4.3-4.3"/></svg><span>جستجو در همه‌جا</span><kbd>Ctrl K</kbd></button>
+      <a class="btn site-link" href="/" target="_blank" rel="noopener">مشاهده‌ی سایت ↗</a>
+    </div>
+    <div id="content"></div>
+  </div>
+</div>
+
+<script>
+/* بارگذاری کتابخانه‌ی supabase: اول نسخه‌ی محلی (اگر روی هاست باشد)، بعد CDN. بعد بقیه‌ی فایل‌ها به‌ترتیب. */
+(function(){
+  function load(src){ return new Promise(function(res,rej){ var s=document.createElement('script'); s.src=src; s.onload=res; s.onerror=function(){ rej(new Error(src)); }; document.head.appendChild(s); }); }
+  var V='?v=20261003a', mods=['core','dashboard','sales','students','courses','content','blog','inbox','system','help'];
+  load('assets/supabase.min.js').catch(function(){ return load('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2'); })
+  .then(function(){ return load('supabase-config.js'); })
+  .then(function(){ return mods.reduce(function(p,m){ return p.then(function(){ return load('assets/admin/'+m+'.js'+V); }); }, Promise.resolve()); })
+  .then(function(){ A.boot(); })
+  .catch(function(e){ document.body.insertAdjacentHTML('afterbegin','<div style="padding:30px;color:#e07a6a;direction:rtl">خطا در بارگذاری پنل: '+String(e&&e.message||e).replace(/</g,'&lt;')+' — اینترنت یا آپلود فایل‌ها را بررسی کن.</div>'); });
+})();
+</script>
+</body>
+</html>
