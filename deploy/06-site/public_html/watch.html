@@ -329,6 +329,7 @@ async function refreshTokenIfNeeded(v){
 /* ─────────── پخش تطبیقی (HLS) ───────────
    برای جلسه‌هایی که با اسکریپت تبدیل آماده شدن: کیفیت خودکار بر اساس سرعت اینترنت هر کاربر */
 let hls = null;
+let hlsNetRetry = 0;
 let hlsLibPromise = null;
 const IS_APPLE = /iP(hone|ad|od)/.test(navigator.userAgent) ||
   (navigator.userAgent.includes('Safari') && !/Chrome|Chromium|Android|CriOS|FxiOS|Edg/.test(navigator.userAgent));
@@ -397,6 +398,8 @@ async function startHls(token, base, resumeAt){
       manifestLoadingMaxRetry: 4,
       levelLoadingMaxRetry: 4,
     });
+    hlsNetRetry = 0;
+    hls.on(Hls.Events.FRAG_LOADED, () => { hlsNetRetry = 0; });
     hls.on(Hls.Events.MANIFEST_PARSED, () => {
       fillQualityMenu();
       if (resumeAt > 1) vid.currentTime = resumeAt;
@@ -408,6 +411,8 @@ async function startHls(token, base, resumeAt){
         // مسیر مستقیم جواب نداد → مسیر عادی سایت
         sessionStorage.setItem('mm_direct_stream_bad', '1');
         startHls(token, '', vid.currentTime || resumeAt);
+      } else if (data.type === Hls.ErrorTypes.NETWORK_ERROR && (hlsNetRetry++ < 3)) {
+        setTimeout(() => { try { hls.startLoad(); } catch(e){} }, 1500 * hlsNetRetry);
       } else if (data.type === Hls.ErrorTypes.MEDIA_ERROR) {
         hls.recoverMediaError();
       } else {
@@ -529,14 +534,63 @@ vid.addEventListener('error', () => {
       vid.play().catch(()=>{});
     }
   } else {
-    // مسیر عادی هم جواب نداد → دلیل احتمالی رو به کاربر بگو
-    clearWaitMsg();
-    const sp = bufEl.querySelector('.sp'); if (sp) sp.style.display = 'none';
-    const bt = document.getElementById('bufText');
-    if (bt) bt.textContent = 'پخش ویدیو ممکن نشد. اگه IDM یا افزونه‌ی دانلود ویدیو فعاله غیرفعالش کن، از Chrome یا Safari به‌روز استفاده کن و صفحه رو رفرش کن.';
-    bufEl.style.display = 'flex';
+    // مسیر عادی هم جواب نداد (معمولاً قطع‌شدن لحظه‌ای اینترنت موبایل) → چند بار خودکار دوباره تلاش می‌کنیم
+    handlePlaybackError();
   }
 });
+
+/* بازیابی خودکار پخش: تا ۳ بار با فاصله‌ی ۱.۵ / ۴ / ۸ ثانیه، با توکن تازه و از همان نقطه‌ای که بود */
+let playRetry = 0, playRetryFor = -1, playRetryTimer = null;
+vid.addEventListener('playing', () => { playRetry = 0; });
+function hidePlayMsg(){ const m = document.getElementById('playMsg'); if (m) m.style.display = 'none'; }
+vid.addEventListener('playing', hidePlayMsg);
+vid.addEventListener('loadeddata', hidePlayMsg);
+function showPlayMsg(text, withBtn){
+  clearWaitMsg();
+  bufEl.style.display = 'none';
+  let m = document.getElementById('playMsg');
+  if (!m) {
+    m = document.createElement('div');
+    m.id = 'playMsg';
+    m.style.cssText = 'position:absolute;inset:0;z-index:70;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:rgba(0,0,0,.72);color:#fff;text-align:center;padding:0 24px;font-size:13px;line-height:1.9';
+    bufEl.parentNode.appendChild(m);
+  }
+  m.innerHTML = '';
+  if (!withBtn) { const sp = document.createElement('div'); sp.className = 'sp'; sp.style.cssText = 'width:34px;height:34px;border:3px solid rgba(255,255,255,.2);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite'; m.appendChild(sp); }
+  const t = document.createElement('div'); t.textContent = text; m.appendChild(t);
+  if (withBtn) {
+    const bt = document.createElement('button');
+    bt.textContent = 'تلاش دوباره';
+    bt.style.cssText = 'padding:9px 22px;border-radius:999px;border:0;background:var(--accent);color:#1a1008;font:inherit;font-weight:700;cursor:pointer';
+    bt.onclick = () => { playRetry = 0; retryPlayback(); };
+    m.appendChild(bt);
+  }
+  m.style.display = 'flex';
+}
+async function retryPlayback(){
+  const i = current, v = videos[i];
+  if (!v) return;
+  showPlayMsg('در حال اتصال دوباره…', false);
+  try { const old = v.token; v.token = null; try { await refreshTokenIfNeeded(v); } catch(e) { v.token = old; } } catch(e) {}
+  if (i !== current) return;
+  try { if (vid.currentTime > 10) localStorage.setItem('mm_pos_' + v.id, String(Math.floor(vid.currentTime))); } catch(e) {}
+  playVideo(i);
+}
+function handlePlaybackError(){
+  const code = vid.error ? vid.error.code : 0;
+  if (playRetryFor !== current) { playRetry = 0; playRetryFor = current; }
+  clearTimeout(playRetryTimer);
+  if (playRetry < 3) {
+    const wait = [1500, 4000, 8000][playRetry++];
+    showPlayMsg('اتصال اینترنت لحظه‌ای قطع شد؛ در حال تلاش دوباره…', false);
+    playRetryTimer = setTimeout(retryPlayback, wait);
+    return;
+  }
+  const desktop = !/iPhone|iPad|Android/i.test(navigator.userAgent);
+  showPlayMsg('پخش ویدیو انجام نشد. اینترنتت را بررسی کن (می‌توانی بین وای‌فای و دیتای موبایل عوض کنی) و «تلاش دوباره» را بزن.'
+    + (desktop ? ' اگر IDM یا افزونه‌ی دانلود ویدیو فعال است، غیرفعالش کن.' : '')
+    + ' (کد خطا: ' + code + ')', true);
+}
 
 function renderAttachments(){}
 
