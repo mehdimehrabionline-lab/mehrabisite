@@ -69,7 +69,7 @@ header('Cache-Control: no-cache');
 
 <meta charset="UTF-8" />
 <link rel="preload" href="/assets/fonts/vazirmatn-arabic-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/fonts/fonts.css?v=20261003a">
+<link rel="stylesheet" href="/assets/fonts/fonts.css?v=20261003b">
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
 <!-- ===== SEO ===== -->
@@ -905,8 +905,8 @@ footer .big em{font-style:italic;color:var(--accent-2)}
 <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png"/>
 <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16.png"/>
 <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png"/>
-<link rel="stylesheet" href="/assets/site.css?v=20261003a">
-<script src="/assets/site.js?v=20261003a" defer></script>
+<link rel="stylesheet" href="/assets/site.css?v=20261003b">
+<script src="/assets/site.js?v=20261003b" defer></script>
 </head>
 <body>
 
