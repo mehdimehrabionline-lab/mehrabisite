@@ -151,3 +151,103 @@ function start(){
 }
 if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',start); else start();
 })();
+
+/* ==========================================================
+   ثبت کیفیت اتصال بازدیدکننده (RUM) — فقط برای عیب‌یابی سرعت/قطعی
+   فقط «میزبان+مسیر» ثبت می‌شود (بدون پارامتر/توکن/موبایل). هر خطایی بی‌صدا نادیده گرفته می‌شود.
+   ========================================================== */
+(function(){
+try{
+  var EP='/api/rum.php', MAXEV=6, evCount=0, loadSent=false, tmr=null;
+  var notes={res:[],fx:[],err:[]}, vid={err:0,wait:0,stall:0}, seenVid=false, t0=0;
+  var of=window.fetch;
+  function ls(k,v){ try{ if(v===undefined) return localStorage.getItem(k); localStorage.setItem(k,v); }catch(e){} return null; }
+  var cid=ls('mm_cid'); if(!cid){ cid=Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(-4); ls('mm_cid',cid); }
+  function clean(u){ try{ var a=new URL(u,location.href); return a.host+a.pathname.slice(0,60); }catch(e){ return String(u||'').split('?')[0].slice(0,80); } }
+  function r(n){ return (typeof n==='number'&&isFinite(n))?Math.max(0,Math.round(n)):0; }
+  function queue(body){ try{ var q=JSON.parse(ls('mm_rum_q')||'[]'); q.push(body); ls('mm_rum_q',JSON.stringify(q.slice(-8))); }catch(e){} }
+  function post(body,beacon){
+    try{
+      if(beacon&&navigator.sendBeacon){ try{ if(navigator.sendBeacon(EP,new Blob([body],{type:'text/plain'}))) return; }catch(e){} }
+      of.call(window,EP,{method:'POST',body:body,keepalive:true,headers:{'Content-Type':'text/plain'}}).then(function(x){ if(!x||!x.ok&&x.status!==204) queue(body); },function(){ queue(body); });
+    }catch(e){}
+  }
+  function conn(){ var c=navigator.connection||navigator.mozConnection||{}; return {et:c.effectiveType||'',rtt:r(c.rtt),dl:c.downlink||0,sd:c.saveData?1:0,ty:c.type||''}; }
+  function nav(){
+    try{
+      var n=performance.getEntriesByType&&performance.getEntriesByType('navigation')[0];
+      if(n) return {dns:r(n.domainLookupEnd-n.domainLookupStart),con:r(n.connectEnd-n.connectStart),tls:n.secureConnectionStart>0?r(n.connectEnd-n.secureConnectionStart):0,
+        ttfb:r(n.responseStart),srv:r(n.responseStart-n.requestStart),dl:r(n.responseEnd-n.responseStart),dcl:r(n.domContentLoadedEventEnd),load:r(n.loadEventEnd),proto:n.nextHopProtocol||'',size:r(n.transferSize)};
+      var t=performance.timing; return {dns:r(t.domainLookupEnd-t.domainLookupStart),con:r(t.connectEnd-t.connectStart),tls:0,ttfb:r(t.responseStart-t.navigationStart),srv:r(t.responseStart-t.requestStart),dl:r(t.responseEnd-t.responseStart),dcl:r(t.domContentLoadedEventEnd-t.navigationStart),load:r(t.loadEventEnd-t.navigationStart),proto:'',size:0};
+    }catch(e){ return {}; }
+  }
+  function slowRes(){
+    try{
+      var l=(performance.getEntriesByType('resource')||[]), o=[], h1=0;
+      l.forEach(function(x){ if(x.nextHopProtocol==='http/1.1') h1++; if(x.duration>4000) o.push({u:clean(x.name),ms:r(x.duration),p:x.nextHopProtocol||''}); });
+      o.sort(function(a,b){return b.ms-a.ms;}); return {n:l.length,h1:h1,slow:o.slice(0,3)};
+    }catch(e){ return {}; }
+  }
+  function base(k){ return {k:k,cid:cid,p:location.pathname.slice(0,60),ts:Date.now(),vw:window.innerWidth||0,con:conn()}; }
+  function sendLoad(){
+    if(loadSent) return; loadSent=true;
+    var d=base('load'); d.nav=nav(); d.rs=slowRes();
+    if(notes.res.length) d.res=notes.res; if(notes.fx.length) d.fx=notes.fx; if(notes.err.length) d.err=notes.err;
+    post(JSON.stringify(d));
+    try{ var q=JSON.parse(ls('mm_rum_q')||'[]'); if(q.length){ ls('mm_rum_q','[]'); q.forEach(function(b){ post(b); }); } }catch(e){}
+  }
+  function sendEvent(extra){
+    if(evCount>=MAXEV) return; evCount++;
+    var d=base('ev'); if(notes.res.length) d.res=notes.res.splice(0); if(notes.fx.length) d.fx=notes.fx.splice(0); if(notes.err.length) d.err=notes.err.splice(0);
+    if(extra) for(var k in extra) d[k]=extra[k];
+    post(JSON.stringify(d));
+  }
+  function later(){ if(!loadSent) return; clearTimeout(tmr); tmr=setTimeout(function(){ sendEvent(); },1500); }
+
+  /* منابع خراب (تصویر/اسکریپت/استایل) و خطاهای JS */
+  window.addEventListener('error',function(e){
+    try{
+      var t=e.target;
+      if(t&&t!==window&&(t.src||t.href)){ if(isMedia(t)) return; var u=clean(t.currentSrc||t.src||t.href); if(u.indexOf('/api/rum.php')<0&&notes.res.length<5){ notes.res.push(u); later(); } return; }
+      if(notes.err.length<3){ notes.err.push(String(e.message||'').slice(0,100)); later(); }
+    }catch(x){}
+  },true);
+
+  /* درخواست‌های fetch ناموفق یا کند (سایت و Supabase) */
+  if(of){
+    window.fetch=function(){
+      var a=arguments, st=Date.now(), p=of.apply(this,a);
+      try{
+        var u=typeof a[0]==='string'?a[0]:(a[0]&&a[0].url)||''; 
+        if(u.indexOf('/api/rum.php')<0){
+          p.then(function(x){ var ms=Date.now()-st; if((!x.ok||ms>8000)&&notes.fx.length<5){ notes.fx.push({u:clean(u),ms:ms,st:x.status}); later(); } },
+                 function(er){ if(notes.fx.length<5){ notes.fx.push({u:clean(u),ms:Date.now()-st,e:(er&&er.name)||'err'}); later(); } });
+        }
+      }catch(e){}
+      return p;
+    };
+  }
+
+  /* ویدیو: خطا، توقف‌های بافر، زمان تا اولین تصویر */
+  function isMedia(t){ return t&&(t.tagName==='VIDEO'||t.tagName==='AUDIO'); }
+  document.addEventListener('loadstart',function(e){ if(isMedia(e.target)){ seenVid=true; t0=Date.now(); vid.src=clean(e.target.currentSrc||e.target.src); } },true);
+  document.addEventListener('playing',function(e){ if(isMedia(e.target)&&vid.ttff===undefined&&t0) vid.ttff=Date.now()-t0; },true);
+  document.addEventListener('waiting',function(e){ if(isMedia(e.target)) vid.wait++; },true);
+  document.addEventListener('stalled',function(e){ if(isMedia(e.target)) vid.stall++; },true);
+  document.addEventListener('error',function(e){
+    if(!isMedia(e.target)) return;
+    vid.err++; vid.code=(e.target.error&&e.target.error.code)||0;
+    sendEvent({vid:{code:vid.code,src:vid.src||clean(e.target.currentSrc),t:r(e.target.currentTime),ns:e.target.networkState,rs:e.target.readyState}});
+  },true);
+  var endSent=false;
+  function sendEnd(){
+    if(endSent||!seenVid||!(vid.err||vid.wait>2||vid.stall||vid.ttff>6000)) return;
+    endSent=true; var d=base('end'); d.vid=vid; post(JSON.stringify(d),true);
+  }
+  window.addEventListener('pagehide',sendEnd);
+  document.addEventListener('visibilitychange',function(){ if(document.visibilityState==='hidden') sendEnd(); });
+
+  function go(){ setTimeout(sendLoad,2500); }
+  if(document.readyState==='complete') go(); else window.addEventListener('load',go);
+}catch(e){}
+})();
